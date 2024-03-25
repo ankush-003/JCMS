@@ -1,96 +1,49 @@
 package com.example.postgres.classes;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "CHANNEL")
 public class Channel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column
+    @Column(name = "description", nullable = false)
     private String description;
 
-    /*
-    @OneToMany(mappedBy = "channel")
-    List<Post> posts;
-    */
-
-    @Column
+    @Column(name = "date_created", updatable = false, columnDefinition = "DATE DEFAULT CURRENT_DATE", nullable = false)
     private LocalDate dateCreated;
 
-    public Channel(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.dateCreated = LocalDate.now();
-    }
+    // relationships
+    @OneToMany(mappedBy = "channel")
+    private List<Post> posts;
 
-    public Channel() {}
-
-    /*
     @ManyToOne
-    @JoinColumn(
-            name = "userid",
-            referencedColumnName = "id"
+    @JoinColumn(name="owner_id", referencedColumnName = "id")
+    private User owner;
+
+    @ManyToMany
+    @JoinTable(
+            name = "SUBSCRIBERS",
+            joinColumns = {
+                    @JoinColumn(name = "channel_id")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "user_id")
+            }
     )
-    User user;
-    */
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(LocalDate dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    /*
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-    */
+    private List<User> subscribers;
 }
