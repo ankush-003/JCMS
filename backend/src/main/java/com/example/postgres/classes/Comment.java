@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue
-    private Integer id;
+    private Long id;
 
     @Column(name = "description", nullable = false)
     private String description;
@@ -27,13 +27,10 @@ public class Comment {
 
     // relationships
     @ManyToOne
-    @JoinColumn(name="postid", referencedColumnName = "id")
+    @JoinColumn(name="postid")
     private Post post;
 
     @ManyToOne
-    @JoinColumn(
-            name = "userid",
-            referencedColumnName = "id"
-    )
+    @JoinColumn(name = "userid")
     private User user;
 }
