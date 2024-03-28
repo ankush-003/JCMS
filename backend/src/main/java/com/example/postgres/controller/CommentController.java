@@ -6,34 +6,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 
 
 @RestController
+@RequestMapping("/comments")
 public class CommentController
 {
     @Autowired
-    private final CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
-    public CommentController(CommentRepository commentRepository) {
-        this.commentRepository = commentRepository;
-    }
-
-
-    @PostMapping("/comments")
+    @PostMapping("")
     public Comment postsNewComment(
             @RequestBody Comment comment
     ){
         return commentRepository.save(comment);
     }
 
-    @GetMapping("/comments")
+    @GetMapping("")
     public List<Comment> findAllComments()
     {
         return commentRepository.findAll();
     }
 
-    @GetMapping("/comments/{comment-id}")
+    @GetMapping("/{comment-id}")
     public Comment findByCommentId(
             @PathVariable("comment-id") Long id
     )
@@ -42,14 +39,14 @@ public class CommentController
 
     }
 
-    @DeleteMapping("/comments")
+    @DeleteMapping("")
     public ResponseEntity<String> deleteAllComments() {
         commentRepository.deleteAll();
         String message = "All Comments have been successfully deleted.";
         return ResponseEntity.ok().body(message);
     }
 
-    @DeleteMapping("/comments/{comment-id}")
+    @DeleteMapping("/{comment-id}")
     public ResponseEntity<String> deleteCommentById(
             @PathVariable("comment-id") Long id
     ) {
@@ -58,7 +55,7 @@ public class CommentController
         return ResponseEntity.ok().body(message);
     }
 
-    @PutMapping("/comments/{comment-id}")
+    @PutMapping("/{comment-id}")
     public ResponseEntity<Comment> updateComment(
             @PathVariable("comment-id") Long id,
             @RequestBody Comment comment
