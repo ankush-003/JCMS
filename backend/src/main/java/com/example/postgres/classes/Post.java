@@ -42,15 +42,15 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+    @JsonBackReference(value="post-user")
     private User user;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value="comment-post")
     private List<Comment> comments;
 
     @ManyToOne
     @JoinColumn(name = "channel_id")
-    @JsonBackReference
+    @JsonBackReference(value="post-channel")
     private Channel channel;
 }

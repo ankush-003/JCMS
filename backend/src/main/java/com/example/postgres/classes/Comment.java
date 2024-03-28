@@ -31,11 +31,11 @@ public class Comment {
     // relationships
     @ManyToOne
     @JoinColumn(name="postid")
-    @JsonBackReference
+    @JsonBackReference(value="comment-post")
     private Post post;
 
     @ManyToOne
     @JoinColumn(name = "userid")
-    @JsonBackReference
+    @JsonBackReference(value="comment-user")
     private User user;
 }

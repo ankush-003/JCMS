@@ -39,15 +39,15 @@ public class User {
 
     //relationships
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value="post-user")
     private List<Post> posts;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value="comment-user")
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value="channel-owner")
     private List<Channel> channels;
 
     /*@ManyToMany(mappedBy = "subscribers", fetch = FetchType.EAGER)

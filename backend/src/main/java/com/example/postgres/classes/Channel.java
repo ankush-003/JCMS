@@ -35,12 +35,12 @@ public class Channel {
 
     // relationships
     @OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value="post-channel")
     private List<Post> posts;
 
     @ManyToOne
     @JoinColumn(name="owner_id")
-    @JsonBackReference
+    @JsonBackReference(value="channel-owner")
     private User owner;
 
     /*
