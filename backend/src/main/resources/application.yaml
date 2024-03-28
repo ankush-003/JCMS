@@ -17,5 +17,5 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-      database: social_app_data
+      database: aryo
       database-platform: org.hibernate.dialect.PostgreSQLDialect
