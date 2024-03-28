@@ -18,7 +18,7 @@ import java.util.List;
 public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -30,11 +30,11 @@ public class Channel {
     private LocalDate dateCreated;
 
     // relationships
-    @OneToMany(mappedBy = "channel")
+    @OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
     private List<Post> posts;
 
     @ManyToOne
-    @JoinColumn(name="owner_id", referencedColumnName = "id")
+    @JoinColumn(name="owner_id")
     private User owner;
 
     @ManyToMany
