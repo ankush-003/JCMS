@@ -1,5 +1,7 @@
 package com.example.postgres.classes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,12 +42,15 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Comment> comments;
 
     @ManyToOne
     @JoinColumn(name = "channel_id")
+    @JsonBackReference
     private Channel channel;
 }
