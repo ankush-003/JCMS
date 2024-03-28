@@ -15,7 +15,4 @@ public class PostController {
     public PostController(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
-
-
-    private Respo
 }

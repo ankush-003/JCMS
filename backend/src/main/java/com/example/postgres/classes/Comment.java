@@ -1,5 +1,6 @@
 package com.example.postgres.classes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +29,11 @@ public class Comment {
     // relationships
     @ManyToOne
     @JoinColumn(name="postid")
+    @JsonBackReference
     private Post post;
 
     @ManyToOne
     @JoinColumn(name = "userid")
+    @JsonBackReference
     private User user;
 }

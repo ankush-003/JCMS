@@ -1,5 +1,6 @@
 package com.example.postgres.classes;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,14 +39,18 @@ public class User {
 
     //relationships
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Post> posts;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Channel> channels;
 
-    @ManyToMany(mappedBy = "subscribers", fetch = FetchType.EAGER)
+    /*@ManyToMany(mappedBy = "subscribers", fetch = FetchType.EAGER)
     private List<Channel> subscribedChannels;
+     */
 }
