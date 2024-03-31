@@ -1,15 +1,12 @@
 # JCMS
+
 A Content Management System, built using Spring Boot
-
-
-
 
 # Backend
 
 ```
-cd '.\backend\cockroachlabs roach-data master roach-data-jpa\'
-mvn clean install
-java -jar target/roach-data-jpa.jar
+cd '.\backend'
+mvn spring-boot:run
 ```
 
 # Frontend
