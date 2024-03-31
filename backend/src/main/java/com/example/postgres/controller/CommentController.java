@@ -2,6 +2,7 @@ package com.example.postgres.controller;
 
 import com.example.postgres.classes.Comment;
 import com.example.postgres.repository.CommentRepository;
+import com.example.postgres.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,17 +18,24 @@ public class CommentController
     @Autowired
     private CommentRepository commentRepository;
 
+    private final CommentService commentService;
+
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
+
+
     @PostMapping("")
-    public Comment postsNewComment(
+    public Comment saveComment(
             @RequestBody Comment comment
     ){
-        return commentRepository.save(comment);
+        return commentService.saveComment(comment);
     }
 
     @GetMapping("")
     public List<Comment> findAllComments()
     {
-        return commentRepository.findAll();
+        return commentService.findAllComments();
     }
 
     @GetMapping("/{comment-id}")
@@ -35,24 +43,20 @@ public class CommentController
             @PathVariable("comment-id") Long id
     )
     {
-        return commentRepository.findById(id).orElse(null);
+        return commentService.findByCommentId(id);
 
     }
 
     @DeleteMapping("")
     public ResponseEntity<String> deleteAllComments() {
-        commentRepository.deleteAll();
-        String message = "All Comments have been successfully deleted.";
-        return ResponseEntity.ok().body(message);
+        return commentService.deleteAllComments();
     }
 
     @DeleteMapping("/{comment-id}")
     public ResponseEntity<String> deleteCommentById(
             @PathVariable("comment-id") Long id
     ) {
-        commentRepository.deleteById(id);
-        String message = "Comment with id " + id + " has been successfully deleted.";
-        return ResponseEntity.ok().body(message);
+        return commentService.deleteCommentById(id);
     }
 
     @PutMapping("/{comment-id}")
@@ -60,12 +64,6 @@ public class CommentController
             @PathVariable("comment-id") Long id,
             @RequestBody Comment comment
     ) {
-        Comment CommentToUpdate = commentRepository.findById(id).orElse(null);
-        if (CommentToUpdate == null) {
-            return ResponseEntity.notFound().build();
-        }
-        CommentToUpdate.setDescription(comment.getDescription());
-        Comment updatedComment = commentRepository.save(CommentToUpdate);
-        return ResponseEntity.ok(updatedComment);
+        return commentService.updateComment(id, comment);
     }
 }
