@@ -53,4 +53,8 @@ public class Post {
     @JoinColumn(name = "channel_id")
     @JsonBackReference(value="post-channel")
     private Channel channel;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @JsonManagedReference(value="post-vote")
+    private List<Vote> votes;
 }
