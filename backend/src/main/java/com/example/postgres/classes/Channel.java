@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -43,7 +42,6 @@ public class Channel {
     @JsonBackReference(value="channel-owner")
     private User owner;
 
-    /*
     @ManyToMany
     @JoinTable(
             name = "SUBSCRIBERS",
@@ -54,6 +52,6 @@ public class Channel {
                     @JoinColumn(name = "user_id")
             }
     )
+    @JsonBackReference(value="channel-subscribers")
     private List<User> subscribers;
-     */
 }
