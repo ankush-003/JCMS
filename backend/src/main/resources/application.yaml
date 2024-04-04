@@ -19,3 +19,7 @@ spring:
             non_contextual_creation: true
       database: aryo
       database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  rsa-private-key: classpath:certs/privateKey.pem
+  rsa-public-key: classpath:certs/publicKey.pem
