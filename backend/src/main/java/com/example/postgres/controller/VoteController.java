@@ -1,3 +1,6 @@
+// Write Vote Controller similar to Comment Controller
+//
+// Path: src/main/java/com/example/postgres/controller/VoteController.java
 package com.example.postgres.controller;
 
 import com.example.postgres.classes.Vote;
@@ -9,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/channel/{channelId}/post/{postId}/votes")
-public class VoteController {
+@RequestMapping("/api/votes")
+public class VoteController
+{
     @Autowired
     private VoteService voteService;
 
@@ -18,22 +22,45 @@ public class VoteController {
         this.voteService = voteService;
     }
 
-    @PostMapping
-    public Vote saveVote(@RequestBody Vote vote) {
+    @PostMapping("")
+    public Vote saveVote(
+            @RequestBody Vote vote
+    ){
         return voteService.saveVote(vote);
     }
 
     @GetMapping("")
-    public List<Vote> getAllVotes()
+    public List<Vote> findAllVotes()
     {
         return voteService.findAllVotes();
     }
 
-    @PutMapping("/{voteId}")
+    @GetMapping("/{vote-id}")
+    public Vote findByVoteId(
+            @PathVariable("vote-id") Long id
+    )
+    {
+        return voteService.findByVoteId(id);
+
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<String> deleteAllVotes() {
+        return voteService.deleteAllVotes();
+    }
+
+    @DeleteMapping("/{vote-id}")
+    public ResponseEntity<String> deleteVoteById(
+            @PathVariable("vote-id") Long id
+    ) {
+        return voteService.deleteVoteById(id);
+    }
+
+    @PutMapping("/{vote-id}")
     public ResponseEntity<Vote> updateVote(
-            @PathVariable("voteId") Long voteId,
+            @PathVariable("vote-id") Long id,
             @RequestBody Vote vote
     ) {
-        return voteService.updateVote(voteId, vote);
+        return voteService.updateVote(id, vote);
     }
 }
