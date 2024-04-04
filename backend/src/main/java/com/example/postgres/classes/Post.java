@@ -1,12 +1,16 @@
 package com.example.postgres.classes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,19 +37,25 @@ public class Post {
     @Column(name = "content")
     private byte[] content;
 
-    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    private Instant created_at;
 
-    // relationships
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference(value="post-user")
     private User user;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @JsonManagedReference(value="comment-post")
     private List<Comment> comments;
 
     @ManyToOne
     @JoinColumn(name = "channel_id")
+    @JsonBackReference(value="post-channel")
     private Channel channel;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @JsonManagedReference(value="post-vote")
+    private List<Vote> votes;
 }

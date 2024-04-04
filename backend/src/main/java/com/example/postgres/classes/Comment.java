@@ -1,11 +1,14 @@
 package com.example.postgres.classes;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,15 +25,17 @@ public class Comment {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
-    private LocalDateTime createdAt;
+    @CreationTimestamp
+    private Instant created_at;
 
     // relationships
     @ManyToOne
     @JoinColumn(name="postid")
+    @JsonBackReference(value="comment-post")
     private Post post;
 
     @ManyToOne
     @JoinColumn(name = "userid")
+    @JsonBackReference(value="comment-user")
     private User user;
 }

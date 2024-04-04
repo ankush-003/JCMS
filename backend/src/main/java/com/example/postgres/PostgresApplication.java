@@ -18,20 +18,20 @@ public class PostgresApplication {
 		SpringApplication.run(PostgresApplication.class, args);
 	}
 
-	@Bean
-	public CommandLineRunner run () {
-		return args -> {
-			System.out.println("Hello from PostgresApplication");
-			User test = User.builder()
-					.name("Ankush")
-					.username("ankush003")
-					.password("password")
-					.email("anshhv2003@gmail.com")
-					.build();
-
-			userRepository.save(test);
-
-			userRepository.findAll().forEach(System.out::println);
-		};
-	}
+//	@Bean
+//	public CommandLineRunner run () {
+//		return args -> {
+//			System.out.println("Hello from PostgresApplication");
+//			User test = User.builder()
+//					.name("Anshul")
+//					.username("anshul003")
+//					.password("password")
+//					.email("anshul2003@gmail.com")
+//					.build();
+//
+//			userRepository.save(test);
+//
+//			userRepository.findAll().forEach(System.out::println);
+//		};
+//	}
 }
