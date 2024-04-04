@@ -52,6 +52,5 @@ public class Channel {
                     @JoinColumn(name = "user_id")
             }
     )
-    @JsonBackReference(value="channel-subscribers")
     private List<User> subscribers;
 }

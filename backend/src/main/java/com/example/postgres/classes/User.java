@@ -37,6 +37,9 @@ public class User {
     @CreationTimestamp
     private Instant created_at;
 
+    @Column(nullable = false, name = "roles")
+    private String roles;
+
     //relationships
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @JsonManagedReference(value="post-user")
@@ -51,9 +54,14 @@ public class User {
     private List<Channel> channels;
 
     @ManyToMany(mappedBy = "subscribers", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="channel-subscribers")
     private List<Channel> subscribedChannels;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonManagedReference(value="user-vote")
     private Vote vote;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference(value="user-refresh-token")
+    private List<RefreshToken> refreshTokens;
+
 }
