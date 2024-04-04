@@ -21,5 +21,5 @@ spring:
       database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 jwt:
-  rsa-private-key: classpath:certs/privateKey.pem
-  rsa-public-key: classpath:certs/publicKey.pem
+  rsa-private-key: classpath:cert/privateKey.pem
+  rsa-public-key: classpath:cert/publicKey.pem
