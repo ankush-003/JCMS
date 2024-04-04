@@ -25,6 +25,7 @@ public class Vote {
     private Post post;
 
     @OneToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "id" , referencedColumnName = "id")
+    @JsonBackReference(value = "user-vote")
     private User user;
 }
