@@ -5,6 +5,7 @@ import com.example.postgres.repository.CommentRepository;
 import com.example.postgres.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -12,11 +13,8 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/comments")
-public class CommentController
-{
-    @Autowired
-    private CommentRepository commentRepository;
+@RequestMapping("/api/comments")
+public class CommentController {
 
     private final CommentService commentService;
 
@@ -24,46 +22,40 @@ public class CommentController
         this.commentService = commentService;
     }
 
-
+    @PreAuthorize("hasAuthority('SCOPE_WRITE')")
     @PostMapping("")
-    public Comment saveComment(
-            @RequestBody Comment comment
-    ){
+    public Comment saveComment(@RequestBody Comment comment) {
         return commentService.saveComment(comment);
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping("")
-    public List<Comment> findAllComments()
-    {
+    public List<Comment> findAllComments() {
         return commentService.findAllComments();
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping("/{comment-id}")
-    public Comment findByCommentId(
-            @PathVariable("comment-id") Long id
-    )
-    {
+    public Comment findByCommentId(@PathVariable("comment-id") Long id) {
         return commentService.findByCommentId(id);
-
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_DELETE')")
     @DeleteMapping("")
     public ResponseEntity<String> deleteAllComments() {
         return commentService.deleteAllComments();
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_DELETE')")
     @DeleteMapping("/{comment-id}")
-    public ResponseEntity<String> deleteCommentById(
-            @PathVariable("comment-id") Long id
-    ) {
+    public ResponseEntity<String> deleteCommentById(@PathVariable("comment-id") Long id) {
         return commentService.deleteCommentById(id);
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_UPDATE')")
     @PutMapping("/{comment-id}")
-    public ResponseEntity<Comment> updateComment(
-            @PathVariable("comment-id") Long id,
-            @RequestBody Comment comment
-    ) {
+    public ResponseEntity<Comment> updateComment(@PathVariable("comment-id") Long id,
+                                                 @RequestBody Comment comment) {
         return commentService.updateComment(id, comment);
     }
 }
