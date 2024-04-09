@@ -24,40 +24,40 @@ public class PostgresApplication {
 		SpringApplication.run(PostgresApplication.class, args);
 	}
 
-//	@Bean
-//	public CommandLineRunner run () {
-//		return args -> {
-//			System.out.println("Hello from PostgresApplication");
-//			for(User user: sampleUsers()) {
-//				userService.saveUser(user);
-//			}
-//		};
-//	}
+	@Bean
+	public CommandLineRunner run () {
+		return args -> {
+			System.out.println("Hello from PostgresApplication");
+			for(User user: sampleUsers()) {
+				userService.saveUser(user);
+			}
+		};
+	}
 
-// 	private List<User> sampleUsers() {
-// 		return List.of(
-// 				User.builder()
-// 						.name("sample1")
-// 						.username("sample1_user")
-// 						.password("password")
-// 						.email("sample1@gmail.com")
-// 						.roles("ROLE_ADMIN")
-// 						.build(),
-// 				User.builder()
-// 						.name("sample2")
-// 						.username("sample2_user")
-// 						.password("password")
-// 						.email("sample2@gmail.com")
-// 						.roles("ROLE_ADMIN")
-// 						.build(),
-// 				User.builder()
-// 						.name("sample3")
-// 						.username("sample3_user")
-// 						.password("password")
-// 						.email("sample3@gmail.com")
-// 						.roles("ROLE_ADMIN")
-// 						.build());
+ 	private List<User> sampleUsers() {
+ 		return List.of(
+ 				User.builder()
+ 						.name("sample1")
+ 						.username("sample1_user")
+ 						.password("password")
+ 						.email("sample1@gmail.com")
+ 						.roles("ROLE_ADMIN")
+ 						.build(),
+ 				User.builder()
+ 						.name("sample2")
+ 						.username("sample2_user")
+ 						.password("password")
+ 						.email("sample2@gmail.com")
+ 						.roles("ROLE_ADMIN")
+ 						.build(),
+ 				User.builder()
+ 						.name("sample3")
+ 						.username("sample3_user")
+ 						.password("password")
+ 						.email("sample3@gmail.com")
+ 						.roles("ROLE_ADMIN")
+ 						.build());
 
 
-// }
+ }
 }

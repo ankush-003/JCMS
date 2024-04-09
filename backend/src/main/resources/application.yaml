@@ -1,25 +1,22 @@
-
 spring:
   application:
-    name: cockroachdb
+    name: postgres
   datasource:
-    url: jdbc:postgresql://ooad-scenes-4187.7s5.aws-ap-south-1.cockroachlabs.cloud:26257/aryo?sslmode=require&user=anonimoose&password=Q1VgCACPgPWR5LhblCHVvA
-    username: anonimoose
-    password: Q1VgCACPgPWR5LhblCHVvA
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: arya
+    password: 1234
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-        jdbc:
-          lob:
-            non_contextual_creation: true
-      database: aryo
+      database: postgresql
       database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 jwt:
   rsa-private-key: classpath:cert/privateKey.pem
   rsa-public-key: classpath:cert/publicKey.pem
+
