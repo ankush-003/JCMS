@@ -37,7 +37,12 @@ import com.example.postgres.config.jwt.JwtTokenUtils;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 import com.example.postgres.config.user.UserInfoManagerConfig;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.beans.Customizer;
+import java.util.Arrays;
 
 
 @Configuration
@@ -58,6 +63,7 @@ public class SecurityConfig {
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         try {
             return httpSecurity
+                    .cors(withDefaults())
                     .securityMatcher(new AntPathRequestMatcher("/api/**"))
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
@@ -83,6 +89,7 @@ public class SecurityConfig {
     public SecurityFilterChain signInSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         try {
             return httpSecurity
+                    .cors(withDefaults())
                     .securityMatcher(new AntPathRequestMatcher("/sign-in/**"))
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
@@ -93,6 +100,7 @@ public class SecurityConfig {
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()));
                     })
                     .httpBasic(withDefaults())
+                    .formLogin(withDefaults())
                     .build();
         } catch (Exception ex) {
             log.error("[SecurityConfig:signInSecurityFilterChain] Exception occurred: {}", ex.getMessage(), ex);
@@ -105,6 +113,7 @@ public class SecurityConfig {
     public SecurityFilterChain refreshTokenSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         try {
             return httpSecurity
+                    .cors(withDefaults())
                     .securityMatcher(new AntPathRequestMatcher("/refresh-token/**"))
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
@@ -128,6 +137,7 @@ public class SecurityConfig {
     public SecurityFilterChain logoutSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         try {
             return httpSecurity
+                    .cors(withDefaults())
                     .securityMatcher(new AntPathRequestMatcher("/logout/**"))
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
@@ -155,6 +165,7 @@ public class SecurityConfig {
     public SecurityFilterChain registerSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
         try {
             return httpSecurity
+                    .cors(withDefaults())
                     .securityMatcher(new AntPathRequestMatcher("/sign-up/**"))
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth ->
@@ -187,6 +198,19 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Change this to the appropriate client origin
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
 

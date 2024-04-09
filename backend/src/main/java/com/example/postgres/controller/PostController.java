@@ -50,6 +50,7 @@ public class PostController {
         return postService.uploadContent(id, content);
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping(
             value="/{post-id}/download",
             produces = MediaType.IMAGE_PNG_VALUE
