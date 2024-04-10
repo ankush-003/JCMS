@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: arya
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+      database: postgresql
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  rsa-private-key: classpath:cert/privateKey.pem
+  rsa-public-key: classpath:cert/publicKey.pem
+
