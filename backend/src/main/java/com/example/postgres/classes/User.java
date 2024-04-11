@@ -59,7 +59,7 @@ public class User {
     @JsonManagedReference(value="channel-owner")
     private List<Channel> channels;
 
-    @ManyToMany(mappedBy = "subscribers", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "subscribers", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     private List<Channel> subscribedChannels;
 
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
