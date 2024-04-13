@@ -2,7 +2,6 @@ package com.example.postgres;
 
 import com.example.postgres.classes.User;
 import com.example.postgres.config.RSAKeyRecord;
-import com.example.postgres.repository.UserRepository;
 import com.example.postgres.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,9 +27,9 @@ public class PostgresApplication {
 	public CommandLineRunner run () {
 		return args -> {
 			System.out.println("Hello from PostgresApplication");
-			for(User user: sampleUsers()) {
-				userService.saveUser(user);
-			}
+//			for(User user: sampleUsers()) {
+//				userService.saveUser(user);
+//			}
 		};
 	}
 
