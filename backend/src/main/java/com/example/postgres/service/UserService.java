@@ -5,13 +5,15 @@ package com.example.postgres.service;
 
 import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.User;
+import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.repository.ChannelRepository;
 import com.example.postgres.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -81,5 +83,13 @@ public class UserService {
         User updatedUser =  userRepository.save(userToUpdate);
         return ResponseEntity.ok(updatedUser);
     }
+
+
+
+
+
+
+
+
 
 }
