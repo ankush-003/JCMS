@@ -1,7 +1,7 @@
 package com.example.postgres.service;
 
 import com.example.postgres.dto.AuthResponseDto;
-import com.example.postgres.Dto.TokenType;
+import com.example.postgres.dto.TokenType;
 import com.example.postgres.dto.UserRegistrationDto;
 import com.example.postgres.classes.RefreshToken;
 import com.example.postgres.classes.User;
