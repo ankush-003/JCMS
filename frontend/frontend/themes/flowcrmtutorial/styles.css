@@ -36,3 +36,8 @@
     color: #6c757d;
     font-size: 14px;
 }
+
+a[highlight] {
+    font-weight: bold;
+    text-decoration: underline;
+}

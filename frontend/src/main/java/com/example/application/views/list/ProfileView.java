@@ -2,6 +2,7 @@ package com.example.application.views.list;
 
 import com.example.application.entity.Channel;
 import com.example.application.entity.UserData;
+import com.example.application.views.MainLayout;
 import com.nimbusds.jose.shaded.gson.Gson;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -25,8 +26,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-@Route("cards")
-
+@Route(value="cards", layout = MainLayout.class)
 public class ProfileView extends VerticalLayout {
 
     private static final String NAME_KEY = "access_token";
