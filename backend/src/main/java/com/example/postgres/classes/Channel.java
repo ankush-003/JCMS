@@ -42,7 +42,7 @@ public class Channel {
     @JsonBackReference(value="channel-owner")
     private User owner;
 
-    @ManyToMany
+    @ManyToMany( cascade = CascadeType.ALL)
     @JoinTable(
             name = "SUBSCRIBERS",
             joinColumns = {

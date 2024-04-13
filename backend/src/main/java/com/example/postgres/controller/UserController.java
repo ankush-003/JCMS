@@ -58,4 +58,12 @@ public class UserController {
                                            @RequestBody User user) {
         return userService.updateUser(id, user);
     }
+
+    @PreAuthorize("hasAuthority('SCOPE_UPDATE')")
+    @PutMapping("/{user-id}/subscribe/{channel-id}")
+    public ResponseEntity<User> subscribeToChannel(@PathVariable("channel-id") Long channel_id,
+                                                   @PathVariable("user-id") Long user_id) {
+        return userService.subscribeToChannel(channel_id, user_id);
+    }
+
 }
