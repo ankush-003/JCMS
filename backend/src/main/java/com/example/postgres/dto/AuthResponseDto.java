@@ -19,7 +19,7 @@ public class AuthResponseDto {
     private int accessTokenExpiry;
 
     @JsonProperty("token_type")
-    private com.example.postgres.Dto.TokenType tokenType;
+    private com.example.postgres.dto.TokenType tokenType;
 
     @JsonProperty("user_name")
     private String userName;

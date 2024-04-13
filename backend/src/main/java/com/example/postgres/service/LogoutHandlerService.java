@@ -1,7 +1,7 @@
 package com.example.postgres.service;
 
 
-import com.example.postgres.Dto.TokenType;
+import com.example.postgres.dto.TokenType;
 import com.example.postgres.repository.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

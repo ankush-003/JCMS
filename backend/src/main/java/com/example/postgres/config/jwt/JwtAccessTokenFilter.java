@@ -1,6 +1,6 @@
 package com.example.postgres.config.jwt;
 
-import com.example.postgres.Dto.TokenType;
+import com.example.postgres.dto.TokenType;
 import com.example.postgres.config.RSAKeyRecord;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
