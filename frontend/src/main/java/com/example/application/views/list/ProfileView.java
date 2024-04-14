@@ -16,6 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
@@ -26,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+@PageTitle("My Profile")
 @Route(value="cards", layout = MainLayout.class)
 public class ProfileView extends VerticalLayout {
 
