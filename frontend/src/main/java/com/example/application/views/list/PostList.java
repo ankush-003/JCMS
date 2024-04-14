@@ -35,15 +35,13 @@ public class PostList extends Main {
 
         statusLabel = new Span("Loading posts...");
         statusLabel.setVisible(false);
-        postGrid = new Grid<Post>(Post.class);
+        postGrid = new Grid<>();
 //        Button newPostButton = new Button("New Post", e -> {
 //            getUI().ifPresent(ui -> ui.navigate(NewPost.class));
 //        });
-        Button loadPostsButton = new Button("Load Posts", e -> {
-            loadPosts();
-        });
+        loadPosts();
 
-        add(statusLabel, postGrid, loadPostsButton);
+        add(statusLabel, postGrid);
     }
 
     private void loadPosts() {
@@ -67,7 +65,12 @@ public class PostList extends Main {
                     statusLabel.setVisible(false);
                     postGrid.setEnabled(true);
                     postGrid.setItems(posts);
+                    postGrid.addColumn(Post::getId).setHeader("ID");
+                    postGrid.addColumn(Post::getTitle).setHeader("Title");
+                    postGrid.addColumn(Post::getUser).setHeader("User");
+                    postGrid.addColumn(Post::getCreated_at).setHeader("Created At");
                     System.out.println("Rendered all posts in PostList");
+                    postGrid.setVisible(true);
                 }));
 
             }, userData.getAccessToken());
