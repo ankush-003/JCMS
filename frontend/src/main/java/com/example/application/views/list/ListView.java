@@ -1,6 +1,7 @@
 package com.example.application.views.list;
 
 import com.example.application.views.MainLayout;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
@@ -63,6 +64,7 @@ public class ListView extends VerticalLayout {
 
         add(buttons);
 
+        UI.getCurrent().getElement().getThemeList().add("dark");
     }
 
 }
