@@ -19,6 +19,7 @@ import java.time.Instant;
 @Builder
 @Table(name = "comments", schema = "public")
 @JsonIdentityInfo(
+        scope = Comment.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
 )

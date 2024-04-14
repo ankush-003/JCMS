@@ -9,13 +9,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.router.HighlightConditions;
-import com.vaadin.flow.router.Router;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.theme.Theme;
-
-import javax.swing.*;
 
 public class MainLayout extends AppLayout {
 
@@ -47,11 +42,15 @@ public class MainLayout extends AppLayout {
         Icon register = VaadinIcon.USER.create();
         Icon list = VaadinIcon.LIST.create();
         Icon posts = VaadinIcon.LIST.create();
+        Icon profile = VaadinIcon.USER.create();
         RouterLink listLink = new RouterLink("List", ListView.class);
         HorizontalLayout listLayout = new HorizontalLayout(list, listLink);
         RouterLink loginLink = new RouterLink("Login", LoginView.class);
         HorizontalLayout loginLayout = new HorizontalLayout(login, loginLink);
         RouterLink registerLink = new RouterLink("Register", RegisterView.class);
+
+        HorizontalLayout profileLayout = new HorizontalLayout(profile, new RouterLink("Profile", ProfileView.class));
+
         HorizontalLayout registerLayout = new HorizontalLayout(register, registerLink);
         RouterLink homeLink = new RouterLink("Home", Home.class);
         HorizontalLayout homeLayout = new HorizontalLayout(home, homeLink);
@@ -67,6 +66,7 @@ public class MainLayout extends AppLayout {
         addToDrawer(new VerticalLayout(
                 homeLayout,
                 loginLayout,
+                profileLayout,
                 registerLayout,
                 listLayout,
                 allPostsLayout
