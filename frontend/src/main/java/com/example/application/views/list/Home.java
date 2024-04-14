@@ -1,6 +1,7 @@
 package com.example.application.views.list;
 
 
+import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -8,7 +9,7 @@ import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.router.Route;
 
 
-@Route("/home")
+@Route(value="/home", layout = MainLayout.class)
 public class Home extends VerticalLayout {
 
     private static final String NAME_KEY = "access_token";

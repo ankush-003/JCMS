@@ -1,6 +1,7 @@
 package com.example.application.views.list;
 
 import com.example.application.entity.UserData;
+import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -25,8 +26,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-@Route("register")
-@PageTitle("Contacts | Vaadin CRM")
+@Route(value="register", layout = MainLayout.class)
+@PageTitle("Get Started")
 public class RegisterView extends VerticalLayout {
 
     public RegisterView() {

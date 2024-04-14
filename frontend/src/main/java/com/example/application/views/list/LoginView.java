@@ -1,5 +1,6 @@
 package com.example.application.views.list;
 
+import com.example.application.views.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.login.LoginForm;
@@ -7,6 +8,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.WebStorage;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.json.JSONObject;
 
@@ -18,7 +20,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-@Route("/login")
+@PageTitle("Login")
+@Route(value="/login", layout = MainLayout.class)
 public class LoginView extends VerticalLayout {
 
     public LoginView() {
