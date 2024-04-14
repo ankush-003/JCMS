@@ -57,4 +57,7 @@ public class ChannelController {
                                                  @RequestBody Channel channel) {
         return channelService.updateChannel(id, channel);
     }
+
+
+
 }
