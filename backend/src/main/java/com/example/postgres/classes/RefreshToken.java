@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name="REFRESH_TOKENS")
 @JsonIdentityInfo(
+        scope = RefreshToken.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
 )

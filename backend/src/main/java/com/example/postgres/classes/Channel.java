@@ -21,6 +21,7 @@ import java.util.List;
 @Builder
 @Table(name = "CHANNEL")
 @JsonIdentityInfo(
+        scope = Channel.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
 )
