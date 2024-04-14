@@ -1,18 +1,20 @@
 package com.example.postgres.config.jwt;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.time.Instant;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.stereotype.Service;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 
 
 
@@ -35,7 +37,7 @@ public class JwtTokenGenerator {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("arya")
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plus(1 , ChronoUnit.MINUTES))//15 minutes time has been set for the access token
+                .expiresAt(Instant.now().plus(30 , ChronoUnit.MINUTES))//30 minutes time has been set for the access token
                 .subject(authentication.getName())
                 .claim("scope", permissions)
                 .build();
@@ -68,7 +70,7 @@ public class JwtTokenGenerator {
         Set<String> permissions = new HashSet<>();
 
         if (roles.contains("ROLE_ADMIN")) {
-            permissions.addAll(List.of("READ", "WRITE", "DELETE"));
+            permissions.addAll(List.of("READ", "WRITE", "DELETE", "UPDATE"));
         }
         if (roles.contains("ROLE_USER")) {
             permissions.add("READ");

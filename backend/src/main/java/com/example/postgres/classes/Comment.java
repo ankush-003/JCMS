@@ -1,6 +1,8 @@
 package com.example.postgres.classes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +11,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +18,11 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 @Table(name = "comments", schema = "public")
+@JsonIdentityInfo(
+        scope = Comment.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class Comment {
     @Id
     @GeneratedValue

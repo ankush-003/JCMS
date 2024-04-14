@@ -1,6 +1,8 @@
 package com.example.postgres.classes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "votes", schema = "public")
+@JsonIdentityInfo(
+        scope = Vote.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+
+)
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

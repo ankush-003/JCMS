@@ -1,7 +1,9 @@
 package com.example.postgres.classes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +20,11 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "CHANNEL")
+@JsonIdentityInfo(
+        scope = Channel.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +41,9 @@ public class Channel {
 
     // relationships
     @OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="post-channel")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private List<Post> posts;
 
     @ManyToOne
@@ -42,7 +51,7 @@ public class Channel {
     @JsonBackReference(value="channel-owner")
     private User owner;
 
-    @ManyToMany
+    @ManyToMany( cascade = CascadeType.ALL)
     @JoinTable(
             name = "SUBSCRIBERS",
             joinColumns = {

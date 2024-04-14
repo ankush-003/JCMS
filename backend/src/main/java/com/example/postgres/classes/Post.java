@@ -1,7 +1,9 @@
 package com.example.postgres.classes;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +13,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -20,6 +21,11 @@ import java.util.List;
 @Entity
 @Builder
 @Table(name = "posts", schema = "public")
+@JsonIdentityInfo(
+        scope = Post.class,
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 public class Post {
     @Id
     @GeneratedValue
@@ -28,11 +34,11 @@ public class Post {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Lob
+//    @Lob
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Lob
+//    @Lob
     @Nullable
     @Column(name = "content")
     private byte[] content;
@@ -43,7 +49,10 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference(value="post-user")
+//    @JsonBackReference(value="post-user")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private User user;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
@@ -52,10 +61,16 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "channel_id")
-    @JsonBackReference(value="post-channel")
+//    @JsonBackReference(value="post-channel")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private Channel channel;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="post-vote")
+//    @JsonManagedReference(value="post-vote")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private List<Vote> votes;
 }
