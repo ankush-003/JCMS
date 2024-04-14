@@ -27,9 +27,9 @@ public class PostgresApplication {
 	public CommandLineRunner run () {
 		return args -> {
 			System.out.println("Hello from PostgresApplication");
-//			for(User user: sampleUsers()) {
-//				userService.saveUser(user);
-//			}
+			for(User user: sampleUsers()) {
+				userService.saveUser(user);
+			}
 		};
 	}
 
