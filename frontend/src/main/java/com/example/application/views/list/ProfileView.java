@@ -2,8 +2,8 @@ package com.example.application.views.list;
 
 import com.example.application.entity.Channel;
 import com.example.application.entity.UserData;
+import com.example.application.services.UserService;
 import com.example.application.views.MainLayout;
-import com.nimbusds.jose.shaded.gson.Gson;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
@@ -11,7 +11,6 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H5;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.binder.Binder;
@@ -20,22 +19,15 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 @PageTitle("My Profile")
 @Route(value="cards", layout = MainLayout.class)
 public class ProfileView extends VerticalLayout {
-
-    private static final String NAME_KEY = "access_token";
-    private Binder<UserData> binder = new Binder<>(UserData.class);
+    private final static Binder<UserData> binder = new Binder<>(UserData.class);
 
 
-    public ProfileView() {
+    public ProfileView(UserService userService) {
 
         HorizontalLayout mainLayout = new HorizontalLayout();
 
@@ -75,7 +67,6 @@ public class ProfileView extends VerticalLayout {
         emailField.getStyle().set("text-align", "center");
         email.add( emailField);
 
-
         H5 usernameheader = new H5("Username");
         usernameheader.addClassNames(LumoUtility.Margin.Top.NONE, LumoUtility.Margin.Bottom.NONE);
         Div username = new Div();
@@ -96,9 +87,6 @@ public class ProfileView extends VerticalLayout {
         channelLayout.getStyle().set("border", "1px solid #000000"); // Set border color to dark blue
         channelLayout.getStyle().set("border-radius", "10px"); // Set border radius
         channelLayout.getStyle().set("padding", "1em"); // Set padding
-
-
-
 
 
         Div channelHeader = new Div();
@@ -127,7 +115,6 @@ public class ProfileView extends VerticalLayout {
         virtualList.setItems(channels);
 
         virtualList.setRenderer(new ComponentRenderer<>(channel -> {
-//            VerticalLayout layout = new VerticalLayout(); // Change to VerticalLayout
             HorizontalLayout layout = new HorizontalLayout();
             layout.setAlignItems(Alignment.CENTER);
             layout.setSpacing(true);
@@ -145,119 +132,17 @@ public class ProfileView extends VerticalLayout {
         }));
 
         channelLayout.add(virtualList);
-
         mainLayout.add(channelLayout); // Add the channelLayout to the mainLayout
-
         add(mainLayout); // Add the mainLayout to the ProfileView
 
-
         Button button = new Button("Get Details",
-                e -> {
-                    getUserData();
-                });
+                e -> userService.getUserData(binder));
 
         add(button);
-//        setSizeFull();
+        setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         UI.getCurrent().getElement().getThemeList().add("dark");
-
-
     }
 
-        public UserData getUserData() {
-            UserData userData = new UserData();
-
-            // Retrieve the access token asynchronously
-            showStoredValue(userData, () -> {
-                System.out.println("Access Token: " + userData.getAccessToken());
-
-                // Once access token is retrieved, make API request
-                try {
-
-                    System.out.println("Making API request...");
-                    System.out.println("aryaaaaa Access Token: " + userData.getAccessToken());
-                    // Create a URL object from the specified address
-                    URL url = new URL("http://localhost:8080/api/users/user");
-
-                    // Open a connection to the URL
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-                    // Set the request method to GET
-                    connection.setRequestMethod("GET");
-
-                    connection.setRequestProperty("Content-Type", "application/json");
-
-                    // Add the Authorization header with the access token
-                    connection.setRequestProperty("Authorization", "Bearer " + userData.getAccessToken());
-
-                    // Set the connection timeout to 5 seconds
-                    connection.setConnectTimeout(5000);
-
-                    // Set the read timeout to 5 seconds
-                    connection.setReadTimeout(5000);
-
-                    // Get the response code from the connection
-                    int responseCode = connection.getResponseCode();
-
-                    System.out.println("Response Code: " + responseCode);
-
-                    // If the response code is 200 (OK), read the response
-                    if (responseCode == 200) {
-                        // Create a BufferedReader object to read the response
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                        // Create a StringBuilder object to store the response
-                        StringBuilder response = new StringBuilder();
-
-
-
-                        // Read the response line by line
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            response.append(line);
-                        }
-
-                        System.out.println("Response: " + response);
-
-                        // Close the reader
-                        reader.close();
-
-                        // Parse the response JSON string to a UserData object
-                        Gson gson = new Gson();
-                        UserData userData1 = gson.fromJson(response.toString(), UserData.class);
-
-
-
-                        String name = userData1.getName();
-                        String userName = userData1.getUser_name();
-                        String email = userData1.getUser_email();
-
-                        binder.setBean(userData1);
-
-
-                        System.out.println("Name: " + name);
-                        System.out.println("User Name: " + userName);
-                        System.out.println("Email: " + email);
-
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-            return userData; // Return null as default or handle the case where user data retrieval fails
-        }
-
-        private void showStoredValue(UserData userData, Runnable callback) {
-            WebStorage.getItem(
-                    NAME_KEY,
-                    value -> {
-                        System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
-                        userData.setAccessToken(value);
-                        callback.run(); // Call the callback after retrieving the access token
-                    }
-            );
-        }
-    }
+}
