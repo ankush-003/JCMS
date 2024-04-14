@@ -33,13 +33,7 @@ public class Home extends VerticalLayout {
                 });
 
         add(button);
-
-
-
     }
-
-
-
 
     private void showStoredValue() {
         WebStorage.getItem(
