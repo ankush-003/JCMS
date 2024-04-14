@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "votes", schema = "public")
 @JsonIdentityInfo(
+        scope = Vote.class,
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
 
