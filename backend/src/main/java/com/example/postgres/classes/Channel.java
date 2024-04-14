@@ -2,7 +2,7 @@ package com.example.postgres.classes;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,7 +40,9 @@ public class Channel {
 
     // relationships
     @OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="post-channel")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private List<Post> posts;
 
     @ManyToOne

@@ -26,8 +26,8 @@ public class Post {
     @JsonProperty("description")
     private String description;
 
-//    @JsonProperty("content")
-//    private byte[] content;
+    @JsonProperty("content")
+    private byte[] content;
 
     @JsonProperty("created_at")
     private Instant created_at;
