@@ -1,4 +1,4 @@
-package com.example.postgres.dto;
+package com.example.postgres.Dto;
 
 
 import jakarta.validation.constraints.Email;

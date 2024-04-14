@@ -5,7 +5,7 @@ package com.example.postgres.service;
 
 import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.User;
-import com.example.postgres.dto.UserDetailsDto;
+import com.example.postgres.Dto.UserDetailsDto;
 import com.example.postgres.repository.ChannelRepository;
 import com.example.postgres.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

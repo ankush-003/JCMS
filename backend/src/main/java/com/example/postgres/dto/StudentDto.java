@@ -1,4 +1,4 @@
-package com.example.postgres.dto;
+package com.example.postgres.Dto;
 
 public record StudentDto(
          String firstname,

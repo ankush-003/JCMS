@@ -1,4 +1,4 @@
-package com.example.postgres.dto;
+package com.example.postgres.Dto;
 
 public enum TokenType {
     Bearer

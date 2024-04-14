@@ -1,4 +1,4 @@
-package com.example.postgres.dto;
+package com.example.postgres.Dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -19,7 +19,7 @@ public class AuthResponseDto {
     private int accessTokenExpiry;
 
     @JsonProperty("token_type")
-    private com.example.postgres.dto.TokenType tokenType;
+    private com.example.postgres.Dto.TokenType tokenType;
 
     @JsonProperty("user_name")
     private String userName;
