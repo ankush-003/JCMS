@@ -24,5 +24,4 @@ public class AuthResponseDto {
     @JsonProperty("user_name")
     private String userName;
 
-
 }
