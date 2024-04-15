@@ -21,9 +21,9 @@ public class ListView extends VerticalLayout {
         addClassName("dark-theme");
         setSpacing(false);
 
-        /*Image img = new Image("images/empty-plant.png", "placeholder plant");
+        Image img = new Image("images/empty-plant.png", "placeholder plant");
         img.setWidth("200px");
-        add(img);*/
+        add(img);
 
         H2 header = new H2("Welcome to JCMS!");
         header.addClassNames(Margin.Top.XLARGE, Margin.Bottom.MEDIUM);
