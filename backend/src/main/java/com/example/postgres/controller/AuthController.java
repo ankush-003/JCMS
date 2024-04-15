@@ -1,6 +1,6 @@
 package com.example.postgres.controller;
 
-import com.example.postgres.dto.UserRegistrationDto;
+import com.example.postgres.Dto.UserRegistrationDto;
 import com.example.postgres.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

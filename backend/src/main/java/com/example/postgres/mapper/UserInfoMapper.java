@@ -1,7 +1,7 @@
 package com.example.postgres.mapper;
 
 
-import com.example.postgres.dto.UserRegistrationDto;
+import com.example.postgres.Dto.UserRegistrationDto;
 import com.example.postgres.classes.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

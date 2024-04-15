@@ -1,6 +1,6 @@
 package com.example.postgres.config.jwt;
 import com.example.postgres.classes.User;
-import com.example.postgres.dto.UserDetailsDto;
+import com.example.postgres.Dto.UserDetailsDto;
 import com.example.postgres.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
