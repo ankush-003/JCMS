@@ -3,19 +3,27 @@ package com.example.postgres;
 import com.example.postgres.classes.User;
 import com.example.postgres.config.RSAKeyRecord;
 import com.example.postgres.service.UserService;
+import com.vaadin.flow.component.page.AppShellConfigurator;
+import com.vaadin.flow.component.page.Push;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.List;
 
 
 @EnableConfigurationProperties(RSAKeyRecord.class)
 @SpringBootApplication
-public class PostgresApplication {
+@Theme(variant = Lumo.DARK)
+@EnableAsync
+@Push
+public class PostgresApplication implements AppShellConfigurator {
 
 	@Autowired
 	private  UserService userService;
@@ -27,14 +35,14 @@ public class PostgresApplication {
 	public CommandLineRunner run () {
 		return args -> {
 			System.out.println("Hello from PostgresApplication");
-			for(User user: sampleUsers()) {
-				userService.saveUser(user);
-			}
+//			for(User user: sampleUsers()) {
+//				userService.saveUser(user);
+//			}
 		};
 	}
 
  	private List<User> sampleUsers() {
- 		return List.of(
+ 	   	return List.of(
  				User.builder()
  						.name("sample1")
  						.username("sample1_user")
@@ -56,7 +64,5 @@ public class PostgresApplication {
  						.email("sample3@gmail.com")
  						.roles("ROLE_ADMIN")
  						.build());
-
-
- }
+ 	}
 }

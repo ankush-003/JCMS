@@ -6,8 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
-
 @Data
 @Builder
 @AllArgsConstructor
@@ -17,13 +15,26 @@ public class UserDetailsDto
     @JsonProperty("name")
     private String name;
 
-@JsonProperty("user_name")
-    private String userName;
+    @JsonProperty("user_name")
+    private String user_name;
 
+    @JsonProperty("user_email")
+    private String user_email;
 
-@JsonProperty("user_email")
-    private String userEmail;
-
-@JsonProperty("user_id")
+    @JsonProperty("user_id")
     private Long userId;
+
+    @JsonProperty("access_token")
+    private String accessToken;
+
+    @JsonProperty("password")
+    private String password;
+
+
+    public UserDetailsDto(String name, String username, String email, Long id) {
+        this.name = name;
+        this.user_name = username;
+        this.user_email = email;
+        this.userId = id;
+    }
 }

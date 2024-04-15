@@ -21,10 +21,10 @@
     </parent>
 
     <repositories>
-        <repository>
-            <id>Vaadin Directory</id>
-            <url>https://maven.vaadin.com/vaadin-addons</url>
-            <snapshots>
+    <repository>
+        <id>Vaadin Directory</id>
+        <url>https://maven.vaadin.com/vaadin-addons</url>
+        <snapshots>
                 <enabled>false</enabled>
             </snapshots>
         </repository>
@@ -90,6 +90,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>postgres</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

@@ -169,7 +169,7 @@ public class RegisterView extends VerticalLayout {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setDoOutput(true);
 
-            String jsonInputString = "{\"name\": \"" + name + "\", \"userName\": \"" + username + "\", \"userEmail\": \"" + email + "\", \"userPassword\": \"" + password + "\", \"userRole\": \"" + role + "\"}";
+            String jsonInputString = "{\"name\": \"" + name + "\", \"user_name\": \"" + username + "\", \"userEmail\": \"" + email + "\", \"userPassword\": \"" + password + "\", \"userRole\": \"" + role + "\"}";
             try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
                 writer.write(jsonInputString);
             }

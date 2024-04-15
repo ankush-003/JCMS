@@ -13,7 +13,6 @@ public class UserData {
     @JsonProperty("name")
     private String name;
 
-
     @JsonProperty("user_name")
     private String user_name;
 
