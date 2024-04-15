@@ -1,4 +1,4 @@
-package com.example.postgres.Dto;
+package com.example.postgres.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

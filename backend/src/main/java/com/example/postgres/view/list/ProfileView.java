@@ -146,5 +146,4 @@ public class ProfileView extends VerticalLayout {
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         UI.getCurrent().getElement().getThemeList().add("dark");
     }
-
 }
