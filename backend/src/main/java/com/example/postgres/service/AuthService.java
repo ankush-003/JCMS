@@ -1,8 +1,8 @@
 package com.example.postgres.service;
 
-import com.example.postgres.dto.AuthResponseDto;
-import com.example.postgres.dto.TokenType;
-import com.example.postgres.dto.UserRegistrationDto;
+import com.example.postgres.dto.AuthResponseDto2;
+import com.example.postgres.dto.TokenType2;
+import com.example.postgres.dto.UserRegistrationDto2;
 import com.example.postgres.classes.RefreshToken;
 import com.example.postgres.classes.User;
 import com.example.postgres.config.jwt.JwtTokenGenerator;
@@ -37,7 +37,7 @@ public class AuthService {
 
 
     //Registration Business Logic
-    public AuthResponseDto registerUser(UserRegistrationDto userRegistrationDto, HttpServletResponse httpServletResponse){
+    public AuthResponseDto2 registerUser(UserRegistrationDto2 userRegistrationDto, HttpServletResponse httpServletResponse){
 
         try{
             log.info("[AuthService:registerUser]User Registration Started with :::{}",userRegistrationDto);
@@ -61,11 +61,11 @@ public class AuthService {
             creatRefreshTokenCookie(httpServletResponse,refreshToken);
 
             log.info("[AuthService:registerUser] User:{} Successfully registered",savedUserDetails.getUsername());
-            return   AuthResponseDto.builder()
+            return   AuthResponseDto2.builder()
                     .accessToken(accessToken)
                     .accessTokenExpiry(5 * 60)
                     .userName(savedUserDetails.getUsername())
-                    .tokenType(TokenType.Bearer)
+                    .tokenType(TokenType2.Bearer)
                     .build();
 
 
@@ -76,7 +76,7 @@ public class AuthService {
 
     }
 
-    public AuthResponseDto getJwtTokensAfterAuthentication(Authentication authentication, HttpServletResponse response) {
+    public AuthResponseDto2 getJwtTokensAfterAuthentication(Authentication authentication, HttpServletResponse response) {
         try
         {
             var userInfoEntity = userInfoRepo.findByEmail(authentication.getName())
@@ -94,11 +94,11 @@ public class AuthService {
             saveUserRefreshToken(userInfoEntity,refreshToken);
 
             log.info("[AuthService:userSignInAuth] Access token for user:{}, has been generated",userInfoEntity.getUsername());
-            return  AuthResponseDto.builder()
+            return  AuthResponseDto2.builder()
                     .accessToken(accessToken)
                     .accessTokenExpiry(15 * 60)
                     .userName(userInfoEntity.getUsername())
-                    .tokenType(TokenType.Bearer)
+                    .tokenType(TokenType2.Bearer)
                     .build();
 
 
@@ -129,7 +129,7 @@ public class AuthService {
 
     public Object getAccessTokenUsingRefreshToken(String authorizationHeader) {
 
-        if(!authorizationHeader.startsWith(TokenType.Bearer.name())){
+        if(!authorizationHeader.startsWith(TokenType2.Bearer.name())){
             return new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Please verify your token type");
         }
 
@@ -148,11 +148,11 @@ public class AuthService {
         //Use the authentication object to generate new accessToken as the Authentication object that we will have may not contain correct role.
         String accessToken = jwtTokenGenerator.generateAccessToken(authentication);
 
-        return  AuthResponseDto.builder()
+        return  AuthResponseDto2.builder()
                 .accessToken(accessToken)
                 .accessTokenExpiry(5 * 60)
                 .userName(userInfoEntity.getUsername())
-                .tokenType(TokenType.Bearer)
+                .tokenType(TokenType2.Bearer)
                 .build();
     }
 

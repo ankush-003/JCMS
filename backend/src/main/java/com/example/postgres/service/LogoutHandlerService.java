@@ -1,7 +1,7 @@
 package com.example.postgres.service;
 
 
-import com.example.postgres.dto.TokenType;
+import com.example.postgres.dto.TokenType2;
 import com.example.postgres.repository.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,7 +25,7 @@ public class LogoutHandlerService implements LogoutHandler {
 
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(!authHeader.startsWith(TokenType.Bearer.name())){
+        if(!authHeader.startsWith(TokenType2.Bearer.name())){
             return;
         }
 

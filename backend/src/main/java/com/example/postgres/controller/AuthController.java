@@ -1,6 +1,6 @@
 package com.example.postgres.controller;
 
-import com.example.postgres.dto.UserRegistrationDto;
+import com.example.postgres.dto.UserRegistrationDto2;
 import com.example.postgres.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -29,7 +29,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDto userRegistrationDto,
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDto2 userRegistrationDto,
                                           BindingResult bindingResult, HttpServletResponse httpServletResponse){
 
         log.info("[AuthController:registerUser]Signup Process Started for user:{}",userRegistrationDto.userName());

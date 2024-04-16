@@ -1,6 +1,6 @@
 package com.example.postgres.config.jwt;
 
-import com.example.postgres.dto.TokenType;
+import com.example.postgres.dto.TokenType2;
 import com.example.postgres.config.RSAKeyRecord;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,7 +21,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
-import com.example.postgres.config.jwt.JwtTokenUtils;
 
 import java.io.IOException;
 
@@ -51,7 +50,7 @@ public class JwtAccessTokenFilter extends OncePerRequestFilter {
             JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
 
             // Check if the token is of type Bearer (basically bearer should be present in the header)
-            if (!authHeader.startsWith(TokenType.Bearer.name())) {
+            if (!authHeader.startsWith(TokenType2.Bearer.name())) {
                 filterChain.doFilter(request, response);
                 return;
             }
