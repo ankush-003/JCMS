@@ -70,5 +70,4 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference(value="user-refresh-token")
     private List<RefreshToken> refreshTokens;
-
 }

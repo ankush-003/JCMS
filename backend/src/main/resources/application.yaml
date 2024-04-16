@@ -1,19 +1,59 @@
+#spring:
+#  application:
+#    name: postgres
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: arya
+#    password: 1234
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        format_sql: true
+#      database: postgresql
+#      database-platform: org.hibernate.dialect.PostgreSQLDialect
+#  mustache:
+#    check-template-location: false
+#
+#jwt:
+#  rsa-private-key: classpath:cert/privateKey.pem
+#  rsa-public-key: classpath:cert/publicKey.pem
+#
+#vaadin:
+#  allowed-packages: com.vaadin, org.vaadin, dev.hilla
+#  launch-browser: true
+#
+#server:
+#  port: ${PORT:8082}
+#
+#logging:
+#  level:
+#    org:
+#      atmosphere: warn
+
+
 spring:
   application:
-    name: postgres
+    name: cockroachdb
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: arya
-    password: 1234
+    url: jdbc:postgresql://ooad-scenes-4187.7s5.aws-ap-south-1.cockroachlabs.cloud:26257/aryo?sslmode=require&user=anonimoose&password=Q1VgCACPgPWR5LhblCHVvA
+    username: anonimoose
+    password: Q1VgCACPgPWR5LhblCHVvA
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-      database: postgresql
+        jdbc:
+          lob:
+            non_contextual_creation: true
+      database: aryo
       database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 jwt:

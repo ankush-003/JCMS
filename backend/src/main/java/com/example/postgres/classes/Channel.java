@@ -62,4 +62,9 @@ public class Channel {
             }
     )
     private List<User> subscribers;
+
+    public Channel(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 }

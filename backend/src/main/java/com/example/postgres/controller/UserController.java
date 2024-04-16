@@ -5,7 +5,7 @@ package com.example.postgres.controller;
 
 import com.example.postgres.classes.User;
 import com.example.postgres.config.jwt.JwtTokenUtils;
-import com.example.postgres.Dto.UserDetailsDto;
+import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.service.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

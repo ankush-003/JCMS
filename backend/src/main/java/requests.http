@@ -1,0 +1,19 @@
+POST localhost:8080/channel
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "channel1",
+  "description": "channel1 description",
+  "owner": {
+    "id": 1
+  }
+}
+
+###
+
+GET localhost:8080/channel/955458571635326977
+
+###
+
+DELETE localhost:8080/channel/955596185054150657

@@ -5,15 +5,22 @@ package com.example.postgres.service;
 
 import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.User;
-import com.example.postgres.Dto.UserDetailsDto;
+import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.repository.ChannelRepository;
 import com.example.postgres.repository.UserRepository;
+import com.nimbusds.jose.shaded.gson.Gson;
+import com.vaadin.flow.component.page.WebStorage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import com.vaadin.flow.data.binder.Binder;
+import java.net.URL;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.util.List;
 
 @Service
@@ -84,12 +91,66 @@ public class UserService {
         return ResponseEntity.ok(updatedUser);
     }
 
+    public UserDetailsDto getUserData(Binder<UserDetailsDto> binder) {
+        UserDetailsDto userData = new UserDetailsDto();
 
+        showStoredValue(userData, () -> {
+            System.out.println("Access Token: " + userData.getAccessToken());
 
+            try {
+                System.out.println("Making API request...");
+                System.out.println("aryaaaaa Access Token: " + userData.getAccessToken());
+                URL url = new URL("http://localhost:8080/api/users/user");
 
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Authorization", "Bearer " + userData.getAccessToken());
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
 
+                int responseCode = connection.getResponseCode();
 
+                System.out.println("Response Code: " + responseCode);
 
+                if (responseCode == 200) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    System.out.println("Response: " + response);
+                    reader.close();
+                    Gson gson = new Gson();
+                    UserDetailsDto userData1 = gson.fromJson(response.toString(), UserDetailsDto.class);
 
+                    String name = userData1.getName();
+                    String userName = userData1.getUser_name();
+                    String email = userData1.getUser_email();
 
+                    binder.setBean(userData1);
+
+                    System.out.println("Name: " + name);
+                    System.out.println("User Name: " + userName);
+                    System.out.println("Email: " + email);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        return userData;
+    }
+
+    private void showStoredValue(UserDetailsDto userData, Runnable callback) {
+        WebStorage.getItem(
+                "access_token",
+                value -> {
+                    System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
+                    userData.setAccessToken(value);
+                    callback.run();
+                }
+        );
+    }
 }
