@@ -70,13 +70,10 @@ public class UserService {
         if (user == null || channel == null) {
             return ResponseEntity.notFound().build();
         }
-        // Add the channel to the user's list of subscribed channels
+
+        //Join Table Updates
         user.getSubscribedChannels().add(channel);
-
-        // Add the user to the channel's list of subscribers
         channel.getSubscribers().add(user);
-
-        // Save both entities to persist the changes
         userRepository.save(user);
         channelRepository.save(channel);
 
