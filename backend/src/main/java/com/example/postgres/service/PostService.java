@@ -37,7 +37,7 @@ public class PostService {
         if (user == null) {
             return ResponseEntity.notFound().build();
         }
-        List<Channel> channels = user.getChannels();
+        List<Channel> channels = user.getSubscribedChannels();
 
         // Get posts of every channel using channel id
 
@@ -48,10 +48,10 @@ public class PostService {
             List<Post>  ChannelPosts = postRepository.findByChannelId(channel.getId());
             posts.addAll(ChannelPosts);
         }
-
-        if (posts.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+//
+//        if (posts.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
 
         return ResponseEntity.ok(posts);
     }
