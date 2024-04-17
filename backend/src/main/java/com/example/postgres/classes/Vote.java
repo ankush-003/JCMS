@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 )
 public class Vote {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(name = "vote_type", nullable = false)
@@ -33,7 +33,7 @@ public class Vote {
     private Post post;
 
     @OneToOne
-    @JoinColumn(name = "id" , referencedColumnName = "id")
+    @JoinColumn(name = "user_id" , referencedColumnName = "id")
     @JsonBackReference(value = "user-vote")
     private User user;
 }

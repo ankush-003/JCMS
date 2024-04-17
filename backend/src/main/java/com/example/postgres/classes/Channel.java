@@ -27,7 +27,7 @@ import java.util.List;
 )
 public class Channel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -52,6 +52,9 @@ public class Channel {
     private User owner;
 
     @ManyToMany( cascade = CascadeType.ALL)
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     @JoinTable(
             name = "SUBSCRIBERS",
             joinColumns = {

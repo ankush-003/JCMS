@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/channel/{channelId}/post/{postId}/votes")
+@RequestMapping("/api/votes")
 public class VoteController {
 
     private final VoteService voteService;
