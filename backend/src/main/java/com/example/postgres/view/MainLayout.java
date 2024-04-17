@@ -3,12 +3,14 @@ package com.example.postgres.view;
 import com.example.postgres.view.list.*;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.RouterLink;
 
@@ -23,13 +25,22 @@ public class MainLayout extends AppLayout {
         H1 logo = new H1("JCMS");
         logo.addClassNames("text-l", "m-m");
 
+        Button logout = new Button("Log out", e -> {
+            WebStorage.removeItem("access_token");
+            showStoredValue();
+            getUI().get().navigate(LoginView.class);
+        });
+
         HorizontalLayout header = new HorizontalLayout(
                 new DrawerToggle(),
-                logo
+                logo,
+                logout
         );
-
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
+        header.expand(logo); // Expand the logo to push the logout button to the right
+        header.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Align items to the end
+
         header.addClassNames("py-0", "px-m");
 
         addToNavbar(header);
@@ -71,5 +82,15 @@ public class MainLayout extends AppLayout {
                 listLayout,
                 allPostsLayout
         ));
+    }
+
+    private void showStoredValue() {
+        WebStorage.getItem(
+                "access_token",
+                value -> {
+//                    stored.setText("Stored value: " + (value == null ? "<no value stored>" : value));
+//                    System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
+                }
+        );
     }
 }

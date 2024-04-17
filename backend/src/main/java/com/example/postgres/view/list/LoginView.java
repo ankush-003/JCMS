@@ -10,6 +10,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -20,8 +21,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
 
-@PageTitle("Login")
 @Route(value="/login", layout = MainLayout.class)
+@PageTitle("Login")
+@AnonymousAllowed
 public class LoginView extends VerticalLayout {
 
     public LoginView() {
