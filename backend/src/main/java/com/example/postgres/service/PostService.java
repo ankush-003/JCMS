@@ -68,4 +68,8 @@ public class PostService {
         Post updatedPost = postRepository.save(postToUpdate);
         return ResponseEntity.ok(updatedPost);
     }
+
+    public List<Post> findPostsByChannelId(Long channelId) {
+        return postRepository.findByChannelId(channelId);
+    }
 }

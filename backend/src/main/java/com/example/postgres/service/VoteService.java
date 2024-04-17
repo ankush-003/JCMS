@@ -6,6 +6,7 @@
 package com.example.postgres.service;
 
 import com.example.postgres.classes.Vote;
+import com.example.postgres.repository.PostRepository;
 import com.example.postgres.repository.VoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,11 @@ import java.util.List;
 public class VoteService {
     @Autowired
     private VoteRepository voteRepository;
+
+    @Autowired
+    public VoteService(VoteRepository voteRepository) {
+        this.voteRepository = voteRepository;
+    }
 
     public Vote saveVote(Vote vote) {
         return voteRepository.save(vote);
@@ -47,5 +53,9 @@ public class VoteService {
         }
         existingVote.setVoteType(vote.getVoteType());
         return ResponseEntity.ok(voteRepository.save(existingVote));
+    }
+
+    public List<Vote> findVotesByPostId(Long id) {
+        return voteRepository.findVotesByPostId(id);
     }
 }
