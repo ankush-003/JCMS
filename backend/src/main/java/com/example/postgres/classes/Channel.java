@@ -40,7 +40,7 @@ public class Channel {
     private Instant dateCreated;
 
     // relationships
-    @OneToMany(mappedBy = "channel", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "channel", fetch = FetchType.LAZY)
     @JsonIdentityReference(
             alwaysAsId = true
     )

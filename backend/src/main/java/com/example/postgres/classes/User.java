@@ -1,6 +1,7 @@
 package com.example.postgres.classes;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -48,23 +49,39 @@ public class User {
     private String roles;
 
     //relationships
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 //    @JsonManagedReference(value="post-user")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="comment-user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+//    @JsonManagedReference(value="comment-user")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="channel-owner")
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+//    @JsonManagedReference(value="channel-owner")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private List<Channel> channels;
 
-    @ManyToMany(mappedBy = "subscribers", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "subscribers", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private List<Channel> subscribedChannels;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="user-vote")
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
+//    @JsonManagedReference(value="user-vote")
     private Vote vote;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

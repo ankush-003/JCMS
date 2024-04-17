@@ -1,18 +1,24 @@
 package com.example.postgres.service;
 
+import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.Post;
+import com.example.postgres.classes.User;
 import com.example.postgres.repository.PostRepository;
+import com.example.postgres.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public Post savePost(Post post) {
         return postRepository.save(post);
@@ -24,6 +30,30 @@ public class PostService {
 
     public Post findByPostId(Long id) {
         return postRepository.findById(id).orElse(null);
+    }
+
+    public ResponseEntity<List<Post>> findUserSubscribedPosts(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<Channel> channels = user.getChannels();
+
+        // Get posts of every channel using channel id
+
+        List<Post> posts = new ArrayList<>();
+
+
+        for (Channel channel : channels) {
+            List<Post>  ChannelPosts = postRepository.findByChannelId(channel.getId());
+            posts.addAll(ChannelPosts);
+        }
+
+        if (posts.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(posts);
     }
 
     public ResponseEntity<byte[]> uploadContent(Long id, byte[] content) {

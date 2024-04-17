@@ -36,6 +36,12 @@ public class PostController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @GetMapping("/user/{user-id}")
+    public ResponseEntity<List<Post>> findUserSubscribedPosts(@PathVariable("user-id") Long id) {
+        return postService.findUserSubscribedPosts(id);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping("/{post-id}")
     public Post findByPostId(@PathVariable("post-id") Long id) {
         return postService.findByPostId(id);
