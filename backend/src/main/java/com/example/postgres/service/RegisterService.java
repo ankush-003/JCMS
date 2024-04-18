@@ -18,7 +18,7 @@ public class RegisterService {
         HttpURLConnection connection = null;
         try {
             // Construct the URL
-            URI baseUri = URI.create("http://localhost:8080/");
+            URI baseUri = URI.create("https://localhost:8080/");
             URI signUpUri = baseUri.resolve("sign-up");
             URL url = signUpUri.toURL();
 

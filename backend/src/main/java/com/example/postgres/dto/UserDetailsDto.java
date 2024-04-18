@@ -22,7 +22,7 @@ public class UserDetailsDto
     private String user_email;
 
     @JsonProperty("user_id")
-    private Long userId;
+    private Long user_id;
 
     @JsonProperty("access_token")
     private String accessToken;
@@ -35,6 +35,6 @@ public class UserDetailsDto
         this.name = name;
         this.user_name = username;
         this.user_email = email;
-        this.userId = id;
+        this.user_id = id;
     }
 }

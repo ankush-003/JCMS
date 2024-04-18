@@ -126,16 +126,49 @@ public class UserService {
                     reader.close();
                     Gson gson = new Gson();
                     UserDetailsDto userData1 = gson.fromJson(response.toString(), UserDetailsDto.class);
-
-                    String name = userData1.getName();
-                    String userName = userData1.getUser_name();
-                    String email = userData1.getUser_email();
+                    Long ID = userData1.getUser_id();
 
                     binder.setBean(userData1);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
-                    System.out.println("Name: " + name);
-                    System.out.println("User Name: " + userName);
-                    System.out.println("Email: " + email);
+        return userData;
+    }
+    public UserDetailsDto getUserData() {
+        UserDetailsDto userData = new UserDetailsDto();
+
+        showStoredValue(userData, () -> {
+
+            try {
+                System.out.println("Making API request to get User Details");
+                URL url = new URL("http://localhost:8080/api/users/user");
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-Type", "application/json");
+                connection.setRequestProperty("Authorization", "Bearer " + userData.getAccessToken());
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
+
+                int responseCode = connection.getResponseCode();
+
+                System.out.println("Response Code: " + responseCode);
+
+                if (responseCode == 200) {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    System.out.println("Response: " + response);
+                    reader.close();
+                    Gson gson = new Gson();
+                    UserDetailsDto userData1 = gson.fromJson(response.toString(), UserDetailsDto.class);
+                    Long ID = userData1.getUser_id();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -149,7 +182,7 @@ public class UserService {
         WebStorage.getItem(
                 "access_token",
                 value -> {
-                    System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
+//                    System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
                     userData.setAccessToken(value);
                     callback.run();
                 }
