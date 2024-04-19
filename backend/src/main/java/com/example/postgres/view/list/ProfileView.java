@@ -55,14 +55,27 @@ public class ProfileView extends VerticalLayout {
 
         getProfile();
 
+        add(statusLabel);
+
     }
 
 
 
     private void getProfile()
     {
+        statusLabel.setVisible(true);
         UserDetailsDto user = new UserDetailsDto();
         showStoredValue(user, () -> {
+
+            if (user.getAccessToken() == null) {
+                statusLabel.setText("Please log in.");
+                statusLabel.addClassNames(LumoUtility.TextColor.ERROR);
+                statusLabel.setVisible(true);
+                Notification notification = Notification
+                        .show("Please log in.", 3000, Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                return;
+            }
 
             HorizontalLayout mainLayout = new HorizontalLayout();
 
@@ -194,26 +207,30 @@ public class ProfileView extends VerticalLayout {
                 value -> {
                     System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
                     user.setAccessToken(value);
-                    getUserDataAsync(user)
-                            .thenAccept(userData -> {
-                                getUI().ifPresent(ui -> ui.access(() -> {
-                                    Long ID = userData.getUser_id();
-                                    user.setUser_id(ID);
-                                    user.setName(userData.getName());
-                                    user.setUser_email(userData.getUser_email());
-                                    user.setUser_name(userData.getUser_name());
-                                    System.out.println("set");
-                                    callback.run(); // Call the callback after retrieving user details
-                                }));
-
-                            })
-                            .exceptionally(ex -> {
-                                ex.printStackTrace();
-                                return null; // Return null to handle the exception
-                            });
+                    if (value != null) {
+                        getUserDataAsync(user)
+                                .thenAccept(userData -> {
+                                    getUI().ifPresent(ui -> ui.access(() -> {
+                                        Long ID = userData.getUser_id();
+                                        user.setUser_id(ID);
+                                        user.setName(userData.getName());
+                                        user.setUser_email(userData.getUser_email());
+                                        user.setUser_name(userData.getUser_name());
+                                        System.out.println("set");
+                                        callback.run(); // Call the callback after retrieving user details
+                                    }));
+                                })
+                                .exceptionally(ex -> {
+                                    ex.printStackTrace();
+                                    return null; // Return null to handle the exception
+                                });
+                    } else {
+                        callback.run(); // Run the callback directly if the value is null
+                    }
                 }
         );
     }
+
 
 
     private CompletableFuture<UserDetailsDto> getUserDataAsync(UserDetailsDto user) {

@@ -127,23 +127,30 @@ public class Home extends VerticalLayout {
                 value -> {
                     System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
                     user.setAccessToken(value);
-                    getUserDataAsync(user)
-                            .thenAccept(userData -> {
-                                getUI().ifPresent(ui -> ui.access(() -> {
-                                    Long ID = userData.getUser_id();
-                                    user.setUser_id(ID);
-                                    System.out.println("set");
-                                    callback.run(); // Call the callback after retrieving user details
-                                }));
-
-                            })
-                            .exceptionally(ex -> {
-                                ex.printStackTrace();
-                                return null; // Return null to handle the exception
-                            });
+                    if (value != null) {
+                        getUserDataAsync(user)
+                                .thenAccept(userData -> {
+                                    getUI().ifPresent(ui -> ui.access(() -> {
+                                        Long ID = userData.getUser_id();
+                                        user.setUser_id(ID);
+                                        user.setName(userData.getName());
+                                        user.setUser_email(userData.getUser_email());
+                                        user.setUser_name(userData.getUser_name());
+                                        System.out.println("set");
+                                        callback.run(); // Call the callback after retrieving user details
+                                    }));
+                                })
+                                .exceptionally(ex -> {
+                                    ex.printStackTrace();
+                                    return null; // Return null to handle the exception
+                                });
+                    } else {
+                        callback.run(); // Run the callback directly if the value is null
+                    }
                 }
         );
     }
+
 
     private CompletableFuture<UserDetailsDto> getUserDataAsync(UserDetailsDto user) {
         return CompletableFuture.supplyAsync(() -> {
