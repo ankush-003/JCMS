@@ -3,6 +3,7 @@
 // Path: src/main/java/com/example/postgres/controller/UserController.java
 package com.example.postgres.controller;
 
+import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.User;
 import com.example.postgres.config.jwt.JwtTokenUtils;
 import com.example.postgres.dto.UserDetailsDto;
@@ -79,6 +80,15 @@ public class UserController {
 
         UserDetailsDto user =  jwtTokenUtils.getUserDetails(authorizationHeader);
         return ResponseEntity.ok(user);
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @GetMapping("/channels/{user-id}")
+    public ResponseEntity<List<Channel>> getUserChannels(@PathVariable("user-id") Long id) {
+
+        List<Channel> channels = userService.getUserChannels(id);
+        return ResponseEntity.ok(channels);
+
     }
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.nimbusds.jose.shaded.gson.annotations.Expose;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,9 +31,13 @@ public class Channel {
     @GeneratedValue
     private Long id;
 
+
+    @Expose
     @Column(name = "name", nullable = false)
     private String name;
 
+
+    @Expose
     @Column(name = "description", nullable = false)
     private String description;
 

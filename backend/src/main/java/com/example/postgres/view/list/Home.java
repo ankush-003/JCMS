@@ -281,8 +281,4 @@ public class Home extends VerticalLayout {
             }, user.getAccessToken());
         });
     }
-
-
-
-
 }

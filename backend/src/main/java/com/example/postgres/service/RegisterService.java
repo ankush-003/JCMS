@@ -10,68 +10,56 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 @Service
 public class RegisterService {
 
+
     public boolean registerUser(String username, String password, String name, String email, String role) {
-        HttpURLConnection connection = null;
-        try {
-            // Construct the URL
-            URI baseUri = URI.create("https://localhost:8080/");
-            URI signUpUri = baseUri.resolve("sign-up");
-            URL url = signUpUri.toURL();
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
 
-            // Open connection
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setDoOutput(true);
+        MediaType mediaType = MediaType.parse("application/json");
 
-            // Prepare JSON data
-            String jsonInputString = String.format("{\"name\": \"%s\", \"user_name\": \"%s\", \"userEmail\": \"%s\", \"userPassword\": \"%s\", \"userRole\": \"%s\"}", name, username, email, password, role);
+        // Create a JSON object
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put("userName", username);
+        jsonBody.put("name", name);
+        jsonBody.put("userEmail", email);
+        jsonBody.put("userPassword", password);
+        jsonBody.put("userRole", role);
 
-            // Send JSON data
-            try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
-                writer.write(jsonInputString);
-            }
+        RequestBody body = RequestBody.create(mediaType, jsonBody.toString());
 
-            // Check response code
-            int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-                System.err.println("Registration failed. Response Code: " + responseCode);
+        Request request = new Request.Builder()
+                .url("http://localhost:8080/sign-up") // Use the correct URL here
+                .post(body)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                // Handle successful response
+                String accessToken = response.body().string();
+                System.out.println("Access Token: " + accessToken);
+                // Store access token in web storage
+                WebStorage.setItem("access_token", accessToken);
+                return true;
+            } else {
+                System.err.println("Registration failed. Response Code: " + response.code());
                 return false;
             }
-
-            // Read response
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            // Parse response JSON
-            JSONObject jsonResponse = new JSONObject(response.toString());
-            String accessToken = jsonResponse.getString("access_token");
-            System.out.println("Access Token: " + accessToken);
-
-            // Store access token in web storage
-            WebStorage.setItem("access_token", accessToken);
-            return true;
-
         } catch (IOException e) {
             System.err.println("Error in Registration: " + e.getMessage());
             return false;
-        } finally {
-            // Disconnect connection
-            if (connection != null) {
-                connection.disconnect();
-            }
         }
     }
+
 
     public void navigateToMainView() {
         UI.getCurrent().navigate(Home.class);
