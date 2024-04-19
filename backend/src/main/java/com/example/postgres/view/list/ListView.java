@@ -65,6 +65,8 @@ public class ListView extends VerticalLayout {
         add(buttons);
 
         UI.getCurrent().getElement().getThemeList().add("dark");
+        //<theme-editor-local-classname>
+        addClassName("list-view-vertical-layout-1");
     }
 
 }

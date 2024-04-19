@@ -1,6 +1,7 @@
 package com.example.postgres.view;
 
 import com.example.postgres.view.list.*;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -18,7 +19,7 @@ public class MainLayout extends AppLayout {
 
     public MainLayout() {
         createHeader();
-        createDrawer();
+        LoginCheck();
     }
 
     private void createHeader() {
@@ -47,17 +48,18 @@ public class MainLayout extends AppLayout {
 
     }
 
-    private void createDrawer() {
+    private void createDrawer(Boolean authenticated) {
+
+
         Icon home = VaadinIcon.HOME.create();
         Icon login = VaadinIcon.SIGN_IN.create();
         Icon register = VaadinIcon.USER.create();
         Icon list = VaadinIcon.LIST.create();
         Icon posts = VaadinIcon.LIST.create();
         Icon profile = VaadinIcon.USER.create();
-        RouterLink listLink = new RouterLink("List", ListView.class);
-        HorizontalLayout listLayout = new HorizontalLayout(list, listLink);
         RouterLink loginLink = new RouterLink("Login", LoginView.class);
         HorizontalLayout loginLayout = new HorizontalLayout(login, loginLink);
+
         RouterLink registerLink = new RouterLink("Register", RegisterView.class);
 
         HorizontalLayout profileLayout = new HorizontalLayout(profile, new RouterLink("Profile", ProfileView.class));
@@ -68,20 +70,39 @@ public class MainLayout extends AppLayout {
         RouterLink allPostsLink = new RouterLink("All Posts", PostList.class);
         HorizontalLayout allPostsLayout = new HorizontalLayout(posts, allPostsLink);
 
-        listLink.setHighlightCondition(HighlightConditions.sameLocation());
+        RouterLink unauthorizedHomeLink = new RouterLink("Home", ListView.class);
+        HorizontalLayout unauthorizedHomeLayout = new HorizontalLayout(home, unauthorizedHomeLink);
+
+
+
         loginLink.setHighlightCondition(HighlightConditions.sameLocation());
         registerLink.setHighlightCondition(HighlightConditions.sameLocation());
         homeLink.setHighlightCondition(HighlightConditions.sameLocation());
         allPostsLink.setHighlightCondition(HighlightConditions.sameLocation());
+        unauthorizedHomeLink.setHighlightCondition(HighlightConditions.sameLocation());
 
-        addToDrawer(new VerticalLayout(
+        if (authenticated) {
+            unauthorizedHomeLayout.setVisible(false);
+            loginLayout.setVisible(false);
+            registerLayout.setVisible(false);
+        } else {
+            homeLayout.setVisible(false);
+            profileLayout.setVisible(false);
+            allPostsLayout.setVisible(false);
+        }
+
+        VerticalLayout drawer = new VerticalLayout(
+                unauthorizedHomeLayout,
                 homeLayout,
                 loginLayout,
-                profileLayout,
                 registerLayout,
-                listLayout,
-                allPostsLayout
-        ));
+                allPostsLayout,
+                profileLayout
+        );
+
+        drawer.addClassName("drawer");
+
+        addToDrawer(drawer);
     }
 
     private void showStoredValue() {
@@ -89,8 +110,19 @@ public class MainLayout extends AppLayout {
                 "access_token",
                 value -> {
 //                    stored.setText("Stored value: " + (value == null ? "<no value stored>" : value));
-//                    System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
+                    System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
                 }
         );
+    }
+
+    private void LoginCheck() {
+        Boolean check  = Boolean.FALSE;
+        if (check) {
+            createDrawer(check);
+        } else {
+            createDrawer(check);
+        }
+
+
     }
 }

@@ -1,4 +1,19 @@
+@import "theme-editor.css";
 /* Profile Card Styles */
+
+:root {
+    --primary : #25072e;
+    --primary-text : #FFFFFA;
+}
+
+
+[theme~="dark"] {
+    --lumo-primary-color: black;
+    --lumo-base-color : black;
+    --lumo-primary-text-color : white;
+}
+
+
 .profile-card {
     background-color: #f8f9fa;
     border-radius: 8px;
@@ -37,7 +52,48 @@
     font-size: 14px;
 }
 
-a[highlight] {
-    font-weight: bold;
-    text-decoration: underline;
+a {
+    color : var(--primary-text);
+}
+
+vaadin-horizontal-layout:has(> a[highlight]) {
+    background-color: var(--primary);
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.drawer {
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    text-align: center;
+    background: hsl(0, 0%, 5%);
+    height: 100%;
+    gap: 0;
+    width: fit-content;
+}
+
+.drawer > * {
+    border-radius: 5px;
+    width: 100%;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+}
+
+.drawer > *:hover {
+    background: hsl(0, 0%, 10%);
+    cursor: pointer;
+}
+
+vaadin-horizontal-layout:has(> a[highlight]):hover {
+    background-color: var(--primary);
+}
+
+vaadin-icon {
+    height: 16px;
+    width: 16px;
 }
