@@ -25,6 +25,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
@@ -36,11 +37,14 @@ public class PostList extends Main {
     private List<Post> posts;
     private final PostServiceFrontend postServiceFrontend;
     private VirtualList<Post> postList;
-    private final Span statusLabel;
+    private final Div statusLabel;
     private UserService userService;
 
     private ComponentRenderer<Component, Post> postsRenderer = new ComponentRenderer<>(
             post -> {
+
+                System.out.println("Rendering post" + post.getVotes().size() + " " + post.getComments() + " " + post.getCreated_at() + " " + post.getDescription() + " " + post.getId() + " " + post.getTitle() + " ");
+
 
                 StreamResource sr = new StreamResource("post", () -> {
                     return new ByteArrayInputStream(post.getContent());
@@ -48,39 +52,53 @@ public class PostList extends Main {
                 sr.setContentType("image/png");
 
                 Image image = new Image(sr, "post");
-                image.setWidth("100px");
-                image.setHeight("100px");
+                image.addClassName("post-image");
 
-                HorizontalLayout cardLayout = new HorizontalLayout();
-                cardLayout.setMargin(true);
+                Div card = new Div();
+
+                Div channel = new Div(new Text("posted on wisdom"));
+                channel.addClassName("post-channel");
+
+                Div user = new Div(new Text("anonimoose"));
+                user.addClassName("post-user");
 
 
-                VerticalLayout infoLayout = new VerticalLayout();
-                infoLayout.setSpacing(false);
-                infoLayout.setPadding(false);
-                infoLayout.getElement().appendChild(
-                        ElementFactory.createStrong(post.getTitle()));
-                infoLayout.add(new Div(new Text(post.getDescription())));
+                Div contact = new Div(user, channel);
+                contact.addClassName("post-contact");
 
-                VerticalLayout contactLayout = new VerticalLayout();
-                contactLayout.setSpacing(false);
-                contactLayout.setPadding(false);
-                contactLayout.add(new Div(new Text("User: " + post.getUser())));
-                contactLayout
-                        .add(new Div(new Text("Channel: " + post.getChannel())));
-                infoLayout
-                        .add(new Details("Additional Info", contactLayout));
+                Div info = getInfo(post);
 
-                cardLayout.add(image, infoLayout);
-                return cardLayout;
+                card.add(image, info);
+                card.addClassName("post-card");
+
+                Div outer = new Div(card, contact);
+                outer.addClassName("post-outer");
+
+
+                return outer;
             }
     );
+
+    @NotNull
+    private static Div getInfo(Post post) {
+        Div title = new Div(new Text(post.getTitle()));
+        title.addClassName("post-title");
+
+        Div description = new Div(new Text(post.getDescription()));
+        description.addClassName("post-description");
+
+        Div info = new Div(title, description);
+        info.addClassName("post-info");
+
+        return info;
+    }
 
     public PostList(@Autowired PostServiceFrontend postServiceFrontend, @Autowired UserService userService) {
         this.postServiceFrontend = postServiceFrontend;
         this.userService = userService;
 
-        statusLabel = new Span("Loading posts...");
+        statusLabel = new Div("Hold on tight...");
+        statusLabel.addClassName("status-label");
         statusLabel.setVisible(false);
 
 
@@ -117,6 +135,7 @@ public class PostList extends Main {
                     postList = new VirtualList<>();
                     postList.setItems(posts);
                     postList.setRenderer(postsRenderer);
+                    postList.addClassName("post-list");
                     add(postList);
                 }));
 

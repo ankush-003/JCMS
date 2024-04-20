@@ -2,7 +2,7 @@
 /* Profile Card Styles */
 
 :root {
-    --primary : #25072e;
+    --primary : #300040;
     --primary-text : #FFFFFA;
 }
 
@@ -96,4 +96,77 @@ vaadin-horizontal-layout:has(> a[highlight]):hover {
 vaadin-icon {
     height: 16px;
     width: 16px;
+}
+
+vaadin-button {
+    background-color: var(--primary);
+    color: var(--primary-text);
+    cursor: pointer;
+}
+
+/* Post Card Styles*/
+.post-image {
+    width: 200px;
+    height: 200px;
+    border-radius: 8px;
+}
+
+.post-list {
+    min-height : 100px;
+    height: fit-content;
+}
+
+.post-outer {
+    display: flex;
+    border-radius: 8px;
+    border: 2px solid hsl(0, 0%, 10%);
+    padding: 16px 16px;
+    margin-bottom: 2em;
+}
+
+.post-outer:hover {
+    background: hsl(0, 0%, 5%);
+    cursor: pointer;
+}
+
+.post-card {
+    display: flex;
+    gap: 1rem;
+    flex: 1 1 0;
+}
+
+.post-info {
+    padding : 0;
+}
+
+.post-contact {
+    display: flex;
+    gap: 0.2rem;
+    font-size: small;
+    justify-content: flex-end;
+    background: var(--primary);
+    width: fit-content;
+    padding: 0.5rem;
+    align-self: self-end;
+}
+
+.post-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/*Loading Status*/
+
+.status-label{
+    width: 100%;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xxx-large;
+}
+
+vaadin-drawer-toggle {
+    cursor: pointer;
 }

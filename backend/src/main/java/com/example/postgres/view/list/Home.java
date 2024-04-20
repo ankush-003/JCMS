@@ -30,10 +30,12 @@ import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.dom.ElementFactory;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
@@ -45,7 +47,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-
+@PageTitle("Home")
 @Route(value="/home", layout = MainLayout.class)
 public class Home extends VerticalLayout {
 
@@ -57,7 +59,7 @@ public class Home extends VerticalLayout {
 
     private final ChannelServiceFrontend channelServiceFrontend;
     private VirtualList<Post> postList;
-    private final Span statusLabel;
+    private final Div statusLabel;
 
 
 
@@ -65,40 +67,53 @@ public class Home extends VerticalLayout {
 
     private ComponentRenderer<Component, Post> postsRenderer = new ComponentRenderer<>(
             post -> {
-
                 StreamResource sr = new StreamResource("post", () -> {
                     return new ByteArrayInputStream(post.getContent());
                 });
                 sr.setContentType("image/png");
 
                 Image image = new Image(sr, "post");
-                image.setWidth("100px");
-                image.setHeight("100px");
+                image.addClassName("post-image");
 
-                HorizontalLayout cardLayout = new HorizontalLayout();
-                cardLayout.setMargin(true);
+                Div card = new Div();
+
+                Div channel = new Div(new Text("posted on wisdom"));
+                channel.addClassName("post-channel");
+
+                Div user = new Div(new Text("anonimoose"));
+                user.addClassName("post-user");
 
 
-                VerticalLayout infoLayout = new VerticalLayout();
-                infoLayout.setSpacing(false);
-                infoLayout.setPadding(false);
-                infoLayout.getElement().appendChild(
-                        ElementFactory.createStrong(post.getTitle()));
-                infoLayout.add(new Div(new Text(post.getDescription())));
+                Div contact = new Div(user, channel);
+                contact.addClassName("post-contact");
 
-                VerticalLayout contactLayout = new VerticalLayout();
-                contactLayout.setSpacing(false);
-                contactLayout.setPadding(false);
-                contactLayout.add(new Div(new Text("User: " + post.getUser())));
-                contactLayout
-                        .add(new Div(new Text("Channel: " + post.getChannel())));
-                infoLayout
-                        .add(new Details("Additional Info", contactLayout));
+                Div info = getInfo(post);
 
-                cardLayout.add(image, infoLayout);
-                return cardLayout;
+                card.add(image, info);
+                card.addClassName("post-card");
+
+                Div outer = new Div(card, contact);
+                outer.addClassName("post-outer");
+
+                System.out.println("Post rendered" + post);
+
+                return outer;
             }
     );
+
+    @NotNull
+    private static Div getInfo(Post post) {
+        Div title = new Div(new Text(post.getTitle()));
+        title.addClassName("post-title");
+
+        Div description = new Div(new Text(post.getDescription()));
+        description.addClassName("post-description");
+
+        Div info = new Div(title, description);
+        info.addClassName("post-info");
+
+        return info;
+    }
 
 
     @Autowired
@@ -109,7 +124,8 @@ public class Home extends VerticalLayout {
 
 
 
-        statusLabel = new Span("Loading ...");
+        statusLabel = new Div("Hold on tight...");
+        statusLabel.addClassName("status-label");
         statusLabel.setVisible(false);
 
         loadPosts();
@@ -282,6 +298,7 @@ public class Home extends VerticalLayout {
                     postList = new VirtualList<>();
                     postList.setItems(posts);
                     postList.setRenderer(postsRenderer);
+                    postList.addClassName("post-list");
                     add(postList);
                 }));
 

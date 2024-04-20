@@ -1,10 +1,13 @@
 package com.example.postgres.view;
 
+import com.example.postgres.service.frontend.FrontendUserService;
 import com.example.postgres.view.list.*;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -13,29 +16,39 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.router.HighlightConditions;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
-
+@PageTitle("Home")
 public class MainLayout extends AppLayout {
 
-    public MainLayout() {
-        createHeader();
-        LoginCheck();
+    private final FrontendUserService frontendUserService;
+
+    public MainLayout(FrontendUserService frontendUserService) {
+        this.frontendUserService = frontendUserService;
+        CheckTokenValidation();
     }
 
-    private void createHeader() {
+    private void createHeader(Boolean authenticated) {
         H1 logo = new H1("JCMS");
         logo.addClassNames("text-l", "m-m");
 
+        HorizontalLayout logoutLayout = new HorizontalLayout();
+
         Button logout = new Button("Log out", e -> {
             WebStorage.removeItem("access_token");
-            showStoredValue();
-            getUI().get().navigate(LoginView.class);
+            getUI().ifPresent(ui -> ui.navigate("login"));
+            createDrawer(false);
         });
+
+        Div userText = new Div(new Text("Logged in as anonimoose"));
+
+        logoutLayout.add(userText,logout);
+        logoutLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
         HorizontalLayout header = new HorizontalLayout(
                 new DrawerToggle(),
                 logo,
-                logout
+                logoutLayout
         );
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
@@ -43,15 +56,19 @@ public class MainLayout extends AppLayout {
         header.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Align items to the end
 
         header.addClassNames("py-0", "px-m");
-
+        if (!authenticated) {
+            logoutLayout.setVisible(false);
+        }
         addToNavbar(header);
 
     }
 
+
+
     private void createDrawer(Boolean authenticated) {
 
-
         Icon home = VaadinIcon.HOME.create();
+        Icon unauthorizedHome = VaadinIcon.HOME.create();
         Icon login = VaadinIcon.SIGN_IN.create();
         Icon register = VaadinIcon.USER.create();
         Icon list = VaadinIcon.LIST.create();
@@ -67,12 +84,13 @@ public class MainLayout extends AppLayout {
         HorizontalLayout registerLayout = new HorizontalLayout(register, registerLink);
         RouterLink homeLink = new RouterLink("Home", Home.class);
         HorizontalLayout homeLayout = new HorizontalLayout(home, homeLink);
-        RouterLink allPostsLink = new RouterLink("All Posts", PostList.class);
+        RouterLink allPostsLink = new RouterLink("Popular", PostList.class);
         HorizontalLayout allPostsLayout = new HorizontalLayout(posts, allPostsLink);
 
         RouterLink unauthorizedHomeLink = new RouterLink("Home", ListView.class);
-        HorizontalLayout unauthorizedHomeLayout = new HorizontalLayout(home, unauthorizedHomeLink);
+        HorizontalLayout unauthorizedHomeLayout = new HorizontalLayout(unauthorizedHome, unauthorizedHomeLink);
 
+        // get current href
 
 
         loginLink.setHighlightCondition(HighlightConditions.sameLocation());
@@ -105,24 +123,20 @@ public class MainLayout extends AppLayout {
         addToDrawer(drawer);
     }
 
-    private void showStoredValue() {
+    private void CheckTokenValidation() {
         WebStorage.getItem(
                 "access_token",
                 value -> {
-//                    stored.setText("Stored value: " + (value == null ? "<no value stored>" : value));
                     System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
+                    LoginCheck(value);
                 }
         );
     }
 
-    private void LoginCheck() {
-        Boolean check  = Boolean.FALSE;
-        if (check) {
-            createDrawer(check);
-        } else {
-            createDrawer(check);
-        }
-
-
+    private void LoginCheck(String token) {
+        Boolean check  = FrontendUserService.isUserLoggedIn(token);
+        System.out.println("Check: " + check);
+        createDrawer(check);
+        createHeader(check);
     }
 }
