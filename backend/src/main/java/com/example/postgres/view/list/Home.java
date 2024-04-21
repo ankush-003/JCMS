@@ -3,6 +3,7 @@ package com.example.postgres.view.list;
 
 import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.Post;
+import com.example.postgres.classes.PostDto;
 import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.service.frontend.ChannelServiceFrontend;
 import com.example.postgres.service.frontend.PostServiceFrontend;
@@ -47,18 +48,18 @@ public class Home extends VerticalLayout {
     private static final String NAME_KEY = "access_token";
 
     private final Binder<Channel> binder = new Binder<>(Channel.class);
-    private List<Post> posts;
+    private List<PostDto> posts;
     private final PostServiceFrontend postServiceFrontend;
 
     private final ChannelServiceFrontend channelServiceFrontend;
-    private VirtualList<Post> postList;
+    private VirtualList<PostDto> postList;
     private final Div statusLabel;
 
 
 
     private UserService userService;
 
-    private ComponentRenderer<Component, Post> postsRenderer = new ComponentRenderer<>(
+    private ComponentRenderer<Component, PostDto> postsRenderer = new ComponentRenderer<>(
             post -> {
                 StreamResource sr = new StreamResource("post", () -> {
                     return new ByteArrayInputStream(post.getContent());
@@ -70,10 +71,10 @@ public class Home extends VerticalLayout {
 
                 Div card = new Div();
 
-                Div channel = new Div(new Text("posted on wisdom"));
+                Div channel = new Div(new Text("posted on " + post.getChannelName()));
                 channel.addClassName("post-channel");
 
-                Div user = new Div(new Text("anonimoose"));
+                Div user = new Div(new Text("by " + post.getUserName()));
                 user.addClassName("post-user");
 
 
@@ -88,14 +89,14 @@ public class Home extends VerticalLayout {
                 Div outer = new Div(card, contact);
                 outer.addClassName("post-outer");
 
-                System.out.println("Post rendered" + post);
+//                System.out.println("Post rendered" + post);
 
                 return outer;
             }
     );
 
     @NotNull
-    private static Div getInfo(Post post) {
+    private static Div getInfo(PostDto post) {
         Div title = new Div(new Text(post.getTitle()));
         title.addClassName("post-title");
 

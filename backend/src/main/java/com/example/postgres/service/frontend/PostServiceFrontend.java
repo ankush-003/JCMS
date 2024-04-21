@@ -1,6 +1,7 @@
 package com.example.postgres.service.frontend;
 
 import com.example.postgres.classes.Post;
+import com.example.postgres.classes.PostDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
@@ -33,14 +34,16 @@ public class PostServiceFrontend implements Serializable {
         spec.retrieve().toEntityList(Post.class).subscribe(
                 posts -> {
                     System.out.println("Got all posts");
-                    System.out.println(posts.getBody());
+//                    System.out.println(posts.getBody());
+                    System.out.println("generic user " + posts.getBody().getFirst().getUser());
+                    System.out.println("generic channel" + posts.getBody().getFirst().getChannel());
                     callback.operationFinished(posts.getBody());
                 }
         );
     }
 
 
-    public void getSubscribedPosts(AsyncRestCallback<List<Post>> callback, String accessToken) {
+    public void getSubscribedPosts(AsyncRestCallback<List<PostDto>> callback, String accessToken) {
         System.out.println("Getting posts of channels you have subscribed to:");
 
         WebClient client = WebClient.builder().codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
@@ -65,10 +68,12 @@ public class PostServiceFrontend implements Serializable {
                         .header("Authorization", "Bearer " + accessToken)
                         .header("Content-Type", "application/json");
 
-                spec.retrieve().toEntityList(Post.class).subscribe(
+                spec.retrieve().toEntityList(PostDto.class).subscribe(
                         posts -> {
                             System.out.println("Got all subscribed channel posts!");
-                            System.out.println(posts.getBody());
+//                            System.out.println(posts.getBody());
+                            System.out.println("Subscriber user " + posts.getBody().getFirst().getUserName());
+                            System.out.println("Subscriber channel" + posts.getBody().getFirst().getChannelName());
                             callback.operationFinished(posts.getBody());
                         }
                 );

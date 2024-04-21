@@ -4,13 +4,17 @@
 
 package com.example.postgres.controller;
 
+import com.example.postgres.classes.Comment;
 import com.example.postgres.classes.Post;
+import com.example.postgres.classes.PostDto;
+import com.example.postgres.classes.Vote;
 import com.example.postgres.service.backend.PostService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -37,8 +41,27 @@ public class PostController {
 
     @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping("/user/{user-id}")
-    public ResponseEntity<List<Post>> findUserSubscribedPosts(@PathVariable("user-id") Long id) {
-        return postService.findUserSubscribedPosts(id);
+    public ResponseEntity<List<PostDto>> findUserSubscribedPosts(@PathVariable("user-id") Long id) {
+        List<Post> posts = postService.findUserSubscribedPosts(id);
+        List<PostDto> postDtos = new ArrayList<>();
+
+        for(Post post: posts) {
+            List<Long> commentIds = new ArrayList<>();
+            for(Comment comment: post.getComments()) {
+                commentIds.add(comment.getId());
+            }
+            List<Long> voteIds = new ArrayList<>();
+            for(Vote vote : post.getVotes()) {
+                voteIds.add(vote.getId());
+            }
+            PostDto postDto = PostDto.builder().id(post.getId()).title(post.getTitle())
+                    .description(post.getDescription()).content(post.getContent())
+                    .created_at(post.getCreated_at()).userName(post.getUser().getUsername())
+                    .comments(commentIds).channelName(post.getChannel().getName())
+                    .votes(voteIds).build();
+        }
+
+        return ResponseEntity.ok(postDtos);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_READ')")

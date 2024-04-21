@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +31,10 @@ public class PostService {
         return postRepository.findById(id).orElse(null);
     }
 
-    public ResponseEntity<List<Post>> findUserSubscribedPosts(Long id) {
+    public List<Post> findUserSubscribedPosts(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
-            return ResponseEntity.notFound().build();
+            return List.of();
         }
         List<Channel> channels = user.getSubscribedChannels();
 
@@ -53,7 +52,7 @@ public class PostService {
 //            return ResponseEntity.notFound().build();
 //        }
 
-        return ResponseEntity.ok(posts);
+        return posts;
     }
 
     public ResponseEntity<byte[]> uploadContent(Long id, byte[] content) {

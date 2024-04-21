@@ -60,4 +60,8 @@ public class ChannelService {
         return ResponseEntity.ok(updatedChannel);
     }
 
+    public ResponseEntity<List<Channel>> searchChannelBy(String name) {
+        List<Channel> channels = channelRepository.searchChannelBy(name);
+        return ResponseEntity.ok(channels);
+    }
 }
