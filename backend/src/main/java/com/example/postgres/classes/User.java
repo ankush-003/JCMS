@@ -77,6 +77,10 @@ public class User {
     )
     private List<Channel> subscribedChannels;
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     @JsonIdentityReference(
             alwaysAsId = true
