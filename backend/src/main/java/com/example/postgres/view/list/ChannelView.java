@@ -13,6 +13,7 @@ import com.example.postgres.service.backend.VoteService;
 import com.example.postgres.service.frontend.CommentFetcher;
 import com.example.postgres.service.frontend.PostServiceFrontend;
 import com.example.postgres.utils.UserUtils;
+import com.example.postgres.utils.UserUtils;
 import com.example.postgres.view.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
