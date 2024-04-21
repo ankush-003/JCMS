@@ -4,10 +4,8 @@
 
 package com.example.postgres.controller;
 
-import com.example.postgres.classes.Comment;
 import com.example.postgres.classes.Post;
 import com.example.postgres.classes.PostDto;
-import com.example.postgres.classes.Vote;
 import com.example.postgres.service.backend.PostService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +33,14 @@ public class PostController {
 
     @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping("")
-    public List<Post> findAllPosts() {
-        return postService.findAllPosts();
+    public ResponseEntity<List<PostDto>> findAllPosts() {
+        List<Post> posts = postService.findAllPosts();
+        List<PostDto> postDtos = new ArrayList<>();
+        for (Post post : posts) {
+            PostDto postDto = PostDto.fromPostEntity(post);
+            postDtos.add(postDto);
+        }
+        return ResponseEntity.ok(postDtos);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_READ')")
@@ -44,24 +48,10 @@ public class PostController {
     public ResponseEntity<List<PostDto>> findUserSubscribedPosts(@PathVariable("user-id") Long id) {
         List<Post> posts = postService.findUserSubscribedPosts(id);
         List<PostDto> postDtos = new ArrayList<>();
-
-        for(Post post: posts) {
-            List<Long> commentIds = new ArrayList<>();
-            for(Comment comment: post.getComments()) {
-                commentIds.add(comment.getId());
-            }
-            List<Long> voteIds = new ArrayList<>();
-            for(Vote vote : post.getVotes()) {
-                voteIds.add(vote.getId());
-            }
-            PostDto postDto = PostDto.builder().id(post.getId()).title(post.getTitle())
-                    .description(post.getDescription()).content(post.getContent())
-                    .created_at(post.getCreated_at()).userName(post.getUser().getUsername())
-                    .comments(commentIds).channelName(post.getChannel().getName())
-                    .votes(voteIds).build();
+        for (Post post : posts) {
+            PostDto postDto = PostDto.fromPostEntity(post);
             postDtos.add(postDto);
         }
-
         return ResponseEntity.ok(postDtos);
     }
 

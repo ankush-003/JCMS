@@ -37,20 +37,13 @@ public class PostService {
             return List.of();
         }
         List<Channel> channels = user.getSubscribedChannels();
-
         // Get posts of every channel using channel id
-
         List<Post> posts = new ArrayList<>();
-
 
         for (Channel channel : channels) {
             List<Post>  ChannelPosts = postRepository.findByChannelId(channel.getId());
             posts.addAll(ChannelPosts);
         }
-//
-//        if (posts.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-//        }
 
         return posts;
     }

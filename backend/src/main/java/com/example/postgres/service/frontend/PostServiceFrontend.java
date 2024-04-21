@@ -1,6 +1,5 @@
 package com.example.postgres.service.frontend;
 
-import com.example.postgres.classes.Post;
 import com.example.postgres.classes.PostDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +19,7 @@ public class PostServiceFrontend implements Serializable {
         void operationFinished(T results);
     }
     // async
-    public void getAllPosts(AsyncRestCallback<List<Post>> callback, String accessToken) {
+    public void getAllPosts(AsyncRestCallback<List<PostDto>> callback, String accessToken) {
         System.out.println("Getting all posts");
 
         WebClient.RequestHeadersSpec<?> spec = WebClient.builder().codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
@@ -31,7 +30,7 @@ public class PostServiceFrontend implements Serializable {
                 ).header("Authorization", "Bearer " + accessToken)
                 .header("Content-Type", "application/json");
 
-        spec.retrieve().toEntityList(Post.class).subscribe(
+        spec.retrieve().toEntityList(PostDto.class).subscribe(
                 posts -> {
                     System.out.println("Got all posts");
 //                    System.out.println(posts.getBody());

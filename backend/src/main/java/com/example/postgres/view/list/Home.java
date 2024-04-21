@@ -2,12 +2,11 @@ package com.example.postgres.view.list;
 
 
 import com.example.postgres.classes.Channel;
-import com.example.postgres.classes.Post;
 import com.example.postgres.classes.PostDto;
 import com.example.postgres.dto.UserDetailsDto;
+import com.example.postgres.service.backend.UserService;
 import com.example.postgres.service.frontend.ChannelServiceFrontend;
 import com.example.postgres.service.frontend.PostServiceFrontend;
-import com.example.postgres.service.backend.UserService;
 import com.example.postgres.view.MainLayout;
 import com.nimbusds.jose.shaded.gson.Gson;
 import com.vaadin.flow.component.Component;
@@ -74,7 +73,7 @@ public class Home extends VerticalLayout {
                 Div channel = new Div(new Text("posted on " + post.getChannelName()));
                 channel.addClassName("post-channel");
 
-                Div user = new Div(new Text("by " + post.getUserName()));
+                Div user = new Div(new Text(post.getUserName()));
                 user.addClassName("post-user");
 
 

@@ -1,10 +1,10 @@
 package com.example.postgres.view.list;
 
 
-import com.example.postgres.classes.Post;
+import com.example.postgres.classes.PostDto;
 import com.example.postgres.dto.UserDetailsDto;
-import com.example.postgres.service.frontend.PostServiceFrontend;
 import com.example.postgres.service.backend.UserService;
+import com.example.postgres.service.frontend.PostServiceFrontend;
 import com.example.postgres.view.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -29,18 +29,14 @@ import java.util.List;
 @PageTitle("Posts")
 @Route(value = "posts", layout = MainLayout.class)
 public class PostList extends Main {
-    private List<Post> posts;
+    private List<PostDto> posts;
     private final PostServiceFrontend postServiceFrontend;
-    private VirtualList<Post> postList;
+    private VirtualList<PostDto> postList;
     private final Div statusLabel;
     private UserService userService;
 
-    private ComponentRenderer<Component, Post> postsRenderer = new ComponentRenderer<>(
+    private ComponentRenderer<Component, PostDto> postsRenderer = new ComponentRenderer<>(
             post -> {
-
-//                System.out.println("Rendering post" + post.getVotes().size() + " " + post.getComments() + " " + post.getCreated_at() + " " + post.getDescription() + " " + post.getId() + " " + post.getTitle() + " ");
-
-
                 StreamResource sr = new StreamResource("post", () -> {
                     return new ByteArrayInputStream(post.getContent());
                 });
@@ -51,10 +47,10 @@ public class PostList extends Main {
 
                 Div card = new Div();
 
-                Div channel = new Div(new Text("posted on wisdom"));
+                Div channel = new Div(new Text("posted on " + post.getChannelName()));
                 channel.addClassName("post-channel");
 
-                Div user = new Div(new Text("anonimoose"));
+                Div user = new Div(new Text(post.getUserName()));
                 user.addClassName("post-user");
 
 
@@ -75,7 +71,7 @@ public class PostList extends Main {
     );
 
     @NotNull
-    private static Div getInfo(Post post) {
+    private static Div getInfo(PostDto post) {
         Div title = new Div(new Text(post.getTitle()));
         title.addClassName("post-title");
 
