@@ -27,6 +27,7 @@ import java.util.List;
         property = "id"
 )
 public class Channel {
+    @Expose
     @Id
     @GeneratedValue
     private Long id;
@@ -71,8 +72,9 @@ public class Channel {
     )
     private List<User> subscribers;
 
-    public Channel(String name, String description) {
+    public Channel(String name, String description, Long Id) {
         this.name = name;
         this.description = description;
+        this.id = Id;
     }
 }

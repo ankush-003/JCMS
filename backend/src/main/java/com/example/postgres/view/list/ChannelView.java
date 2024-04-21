@@ -11,16 +11,17 @@ import com.example.postgres.view.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
 import java.util.List;
+import java.util.Optional;
 
 @PageTitle("Channel")
-@Route(value="channel", layout = MainLayout.class)
-public class ChannelView extends Div implements HasUrlParameter<String>  {
+@Route(value = "channel/:channelName", layout = MainLayout.class)
+public class ChannelView extends Div implements BeforeEnterObserver {
     private final PostService postService;
     private final UserService userService;
     private final VoteService voteService;
@@ -46,24 +47,30 @@ public class ChannelView extends Div implements HasUrlParameter<String>  {
     }
 
     @Override
-    public void setParameter(BeforeEvent beforeEvent, String channelName) {
+    public void beforeEnter(BeforeEnterEvent event) {
+        Optional<String> channelNameParam = event.getRouteParameters().get("channelName");
+        channelNameParam.ifPresent(name -> {
+            channelName = name;
+            displayPosts();
+        });
+
         if (channelName == null) {
             setText("No channel selected");
-        } else {
-            this.channelName = channelName;
-            displayPosts();
         }
     }
 
     private void displayPosts() {
         removeAll();
         add(createPostButton);
-        List<Post> posts = postService.findPostsByChannelName(channelName);
-        for (Post post : posts) {
-            List<Vote> votes = voteService.findVotesByPostId(post.getId());
-            post.setVotes(votes);
-            PostComponent postComponent = new PostComponent(post, voteService);
-            add(postComponent);
+        Channel channel = channelService.findByChannelName(channelName);
+        if (channel != null) {
+            List<Post> posts = postService.findPostsByChannelName(channel.getName());
+            for (Post post : posts) {
+                List<Vote> votes = voteService.findVotesByPostId(post.getId());
+                post.setVotes(votes);
+                PostComponent postComponent = new PostComponent(post, voteService);
+                add(postComponent);
+            }
         }
     }
 }

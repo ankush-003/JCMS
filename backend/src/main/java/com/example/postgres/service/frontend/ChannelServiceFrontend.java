@@ -115,7 +115,7 @@ public class ChannelServiceFrontend {
             Channel[] channels = gson.fromJson(responseBody, Channel[].class);
             System.out.println(Arrays.toString(channels));
             List<Channel> myChannels = Arrays.stream(channels)
-                    .map(c -> new Channel(c.getName(), c.getDescription()))
+                    .map(c -> new Channel(c.getName(), c.getDescription(),c.getId()))
                     .collect(Collectors.toList());
             virtualList.setItems(myChannels);
 
