@@ -9,6 +9,6 @@ import java.util.List;
 public interface ChannelRepository extends JpaRepository<Channel, Long> {
     Channel findByName(String name);
 
-    @Query("SELECT c FROM Channel c WHERE c.name LIKE %:name%")
+    @Query("SELECT c FROM Channel c WHERE LOWER(c.name) LIKE %:name%")
     List<Channel> searchChannelBy(String name);
 }

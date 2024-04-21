@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @PageTitle("My Profile")
-@Route(value="cards", layout = MainLayout.class)
+@Route(value="profile", layout = MainLayout.class)
 public class ProfileView extends VerticalLayout {
     private final static Binder<UserDetailsDto> binder = new Binder<>(UserDetailsDto.class);
 

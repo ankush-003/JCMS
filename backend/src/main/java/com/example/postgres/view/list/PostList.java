@@ -27,7 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @PageTitle("Posts")
-@Route(value = "posts", layout = MainLayout.class)
+@Route(value = "popular", layout = MainLayout.class)
 public class PostList extends Main {
     private List<PostDto> posts;
     private final PostServiceFrontend postServiceFrontend;

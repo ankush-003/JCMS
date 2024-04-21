@@ -76,5 +76,14 @@ public class Channel {
         this.name = name;
         this.description = description;
         this.id = Id;
+        this.dateCreated = Instant.now();
+        this.subscribers = List.of();
+    }
+
+    public Channel(long id, String channelName, String description, Instant dateCreated) {
+        this.id = id;
+        this.name = channelName;
+        this.description = description;
+        this.dateCreated = dateCreated;
     }
 }

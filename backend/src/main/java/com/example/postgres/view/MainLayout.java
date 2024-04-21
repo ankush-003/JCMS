@@ -7,6 +7,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
@@ -15,20 +16,27 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.WebStorage;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.HighlightConditions;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.router.RouterLink;
 @PageTitle("Home")
 public class MainLayout extends AppLayout {
 
     private final FrontendUserService frontendUserService;
+    private HorizontalLayout header;
+    private VerticalLayout drawer;
+
+
 
     public MainLayout(FrontendUserService frontendUserService) {
         this.frontendUserService = frontendUserService;
         CheckTokenValidation();
     }
 
-    private void createHeader(Boolean authenticated) {
+    private void createHeader(Boolean authenticated, String token) {
+        remove(header);
         H1 logo = new H1("JCMS");
         logo.addClassNames("text-l", "m-m");
 
@@ -37,22 +45,49 @@ public class MainLayout extends AppLayout {
         Button logout = new Button("Log out", e -> {
             WebStorage.removeItem("access_token");
             getUI().ifPresent(ui -> ui.navigate("login"));
-//            createDrawer(false);
+            createHeader(false,"");
+            createDrawer(false,"");
         });
 
-        Div userText = new Div(new Text("Logged in as anonimoose"));
+
+        String username = "";
+        if (authenticated) {
+            username = frontendUserService.getUsername(token);
+        }
+
+
+        Div userText = new Div(new Text("Logged in as "+ username));
 
         logoutLayout.add(userText,logout);
         logoutLayout.setAlignItems(FlexComponent.Alignment.CENTER);
 
-        HorizontalLayout header = new HorizontalLayout(
+        TextField textField = new TextField();
+        textField.setClearButtonVisible(true);
+        textField.setPrefixComponent(VaadinIcon.SEARCH.create());
+        textField.setPlaceholder("Search Channels");
+
+        Button searchButton = new Button("Search");
+        searchButton.addClickListener(e -> {
+            String searchQuery = textField.getValue();
+            searchQuery = searchQuery.trim();
+            if (!searchQuery.isEmpty()) {
+                UI.getCurrent().navigate("search/" + searchQuery);
+            }
+        });
+
+        // Handle search
+
+
+        header = new HorizontalLayout(
                 new DrawerToggle(),
                 logo,
+                textField,
+                searchButton,
                 logoutLayout
         );
         header.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.CENTER);
         header.setWidth("100%");
-        header.expand(logo); // Expand the logo to push the logout button to the right
+        header.expand(textField); // Expand the logo to push the logout button to the right
         header.setJustifyContentMode(FlexComponent.JustifyContentMode.END); // Align items to the end
 
         header.addClassNames("py-0", "px-m");
@@ -65,14 +100,15 @@ public class MainLayout extends AppLayout {
 
 
 
-    private void createDrawer(Boolean authenticated) {
-
+    private void createDrawer(Boolean authenticated, String token) {
+        remove(drawer);
         Icon home = VaadinIcon.HOME.create();
         Icon unauthorizedHome = VaadinIcon.HOME.create();
         Icon login = VaadinIcon.SIGN_IN.create();
         Icon register = VaadinIcon.USER.create();
         Icon list = VaadinIcon.LIST.create();
         Icon posts = VaadinIcon.LIST.create();
+        Icon channel = VaadinIcon.ARROW_RIGHT.create();
         Icon profile = VaadinIcon.USER.create();
         RouterLink loginLink = new RouterLink("Login", LoginView.class);
         HorizontalLayout loginLayout = new HorizontalLayout(login, loginLink);
@@ -99,23 +135,65 @@ public class MainLayout extends AppLayout {
         allPostsLink.setHighlightCondition(HighlightConditions.sameLocation());
         unauthorizedHomeLink.setHighlightCondition(HighlightConditions.sameLocation());
 
+        Div channelLayout = new Div();
+        channelLayout.addClassNames("channel-list-drawer");
+
+        Div channelDiv = new Div("Subscribed Channels");
+        channelDiv.addClassNames("sub-heading");
+
+        homeLayout.addClickListener(e -> {
+            UI.getCurrent().navigate("/home");
+        });
+        loginLayout.addClickListener(e -> {
+            UI.getCurrent().navigate("/login");
+        });
+        registerLayout.addClickListener(e -> {
+            UI.getCurrent().navigate("/register");
+        });
+        allPostsLayout.addClickListener(e -> {
+            UI.getCurrent().navigate("/popular");
+        });
+        unauthorizedHomeLayout.addClickListener(e -> {
+            UI.getCurrent().navigate("/");
+        });
+        profileLayout.addClickListener(e -> {
+            UI.getCurrent().navigate("/profile");
+        });
+
+
+
         if (authenticated) {
             unauthorizedHomeLayout.setVisible(false);
             loginLayout.setVisible(false);
             registerLayout.setVisible(false);
+
+            frontendUserService.getSubscribedChannels(token).forEach(channelName -> {
+                Anchor channelLink = new Anchor("channel/" + channelName, channelName);
+                Div individualChannelDiv  = new Div(new Icon(VaadinIcon.ARROW_RIGHT),channelLink );
+                individualChannelDiv.addClickListener(e -> {
+                    UI.getCurrent().navigate("channel/" + channelName);
+                });
+
+                individualChannelDiv.addClassName("channel-div-drawer");
+                channelLayout.add(individualChannelDiv);
+            });
+
         } else {
             homeLayout.setVisible(false);
             profileLayout.setVisible(false);
             allPostsLayout.setVisible(false);
+            channelDiv.setVisible(false);
         }
 
-        VerticalLayout drawer = new VerticalLayout(
+        drawer = new VerticalLayout(
                 unauthorizedHomeLayout,
                 homeLayout,
                 loginLayout,
                 registerLayout,
                 allPostsLayout,
-                profileLayout
+                profileLayout,
+                channelDiv,
+                channelLayout
         );
 
         drawer.addClassName("drawer");
@@ -123,7 +201,7 @@ public class MainLayout extends AppLayout {
         addToDrawer(drawer);
     }
 
-    private void CheckTokenValidation() {
+    public void CheckTokenValidation() {
         WebStorage.getItem(
                 "access_token",
                 value -> {
@@ -134,9 +212,9 @@ public class MainLayout extends AppLayout {
     }
 
     private void LoginCheck(String token) {
-        Boolean check  = FrontendUserService.isUserLoggedIn(token);
+        Boolean check  = frontendUserService.isUserLoggedIn(token);
         System.out.println("Check: " + check);
-        createDrawer(check);
-        createHeader(check);
+        createDrawer(check,token);
+        createHeader(check,token);
     }
 }

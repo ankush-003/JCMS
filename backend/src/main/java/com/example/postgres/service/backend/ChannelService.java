@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class ChannelService {
@@ -61,6 +62,7 @@ public class ChannelService {
     }
 
     public ResponseEntity<List<Channel>> searchChannelBy(String name) {
+        name = name.toLowerCase(Locale.ROOT);
         List<Channel> channels = channelRepository.searchChannelBy(name);
         return ResponseEntity.ok(channels);
     }

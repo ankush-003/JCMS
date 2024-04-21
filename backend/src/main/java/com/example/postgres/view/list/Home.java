@@ -275,8 +275,7 @@ public class Home extends VerticalLayout {
             dialog.getFooter().add(saveButton);
 
             Button button = new Button("Create Channel", e -> dialog.open());
-
-            add(button , dialog);
+            button.addClassName("create-channel-button");
 
 
 
@@ -292,10 +291,12 @@ public class Home extends VerticalLayout {
                     postList.setItems(posts);
                     postList.setRenderer(postsRenderer);
                     postList.addClassName("post-list");
+                    add(button , dialog);
                     add(postList);
                 }));
 
             }, user.getAccessToken());
+
         });
     }
 }

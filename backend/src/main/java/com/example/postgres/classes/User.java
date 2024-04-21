@@ -85,6 +85,9 @@ public class User {
     private Vote vote;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference(value="user-refresh-token")
+//    @JsonManagedReference(value="user-refresh-token")
+    @JsonIdentityReference(
+            alwaysAsId = true
+    )
     private List<RefreshToken> refreshTokens;
 }

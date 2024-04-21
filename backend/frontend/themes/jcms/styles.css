@@ -76,7 +76,7 @@ a:hover {
     width: fit-content;
 }
 
-.drawer > * {
+.drawer > vaadin-horizontal-layout {
     border-radius: 5px;
     width: 100%;
     padding: 8px 16px;
@@ -84,7 +84,7 @@ a:hover {
     align-items: center;
 }
 
-.drawer > *:hover {
+.drawer > vaadin-horizontal-layout:hover {
     background: hsl(0, 0%, 10%);
     cursor: pointer;
 }
@@ -109,11 +109,15 @@ vaadin-button {
     width: 200px;
     height: 200px;
     border-radius: 8px;
+    flex-shrink: 0;
 }
-
+.create-channel-button {
+    margin-left: 2rem;
+}
 .post-list {
     min-height : 100px;
     height: fit-content;
+    padding: 2rem;
 }
 
 .post-outer {
@@ -148,6 +152,7 @@ vaadin-button {
     width: fit-content;
     padding: 0.5rem;
     align-self: self-end;
+    border-radius: 4px;
 }
 
 .post-title {
@@ -168,5 +173,92 @@ vaadin-button {
 }
 
 vaadin-drawer-toggle {
+    cursor: pointer;
+}
+
+.sub-heading {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    font-weight: bold;
+    font-size: large;
+    background: var(--primary);
+    border-radius: 5px;
+
+}
+
+.sub-heading:hover {
+    cursor: default;
+    text-align: center;
+}
+
+/*Search Page */
+
+.all-channels {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.channel-div {
+    border: 2px solid hsl(0, 0%, 10%);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+
+.channel-div:hover {
+    background: hsl(0, 0%, 10%);
+    cursor: pointer;
+}
+
+.channel-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 0 -8px;
+
+}
+
+.channel-description {
+    flex-wrap: wrap;
+}
+
+.channel-date {
+    font-size: small;
+    color: #6c757d;
+    text-align: end;
+}
+
+.search-text {
+    padding: 1rem 2rem 0;
+    font-size: x-large;
+}
+
+.loading {
+    padding: 1rem 2rem 0;
+    font-size: x-large;
+}
+
+.no-results {
+    padding: 1rem 2rem 0;
+    font-size: x-large;
+}
+
+.channel-list-drawer {
+    display: flex;
+    flex-direction: column;
+}
+.channel-div-drawer {
+    border-radius: 5px;
+    width: auto;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.channel-div-drawer:hover {
+    background: hsl(0, 0%, 10%);
     cursor: pointer;
 }

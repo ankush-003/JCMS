@@ -63,7 +63,7 @@ public class AuthService {
             log.info("[AuthService:registerUser] User:{} Successfully registered",savedUserDetails.getUsername());
             return   AuthResponseDto.builder()
                     .accessToken(accessToken)
-                    .accessTokenExpiry(5 * 60)
+                    .accessTokenExpiry(24* 60 * 60)
                     .userName(savedUserDetails.getUsername())
                     .tokenType(TokenType.Bearer)
                     .build();
@@ -96,7 +96,7 @@ public class AuthService {
             log.info("[AuthService:userSignInAuth] Access token for user:{}, has been generated",userInfoEntity.getUsername());
             return  AuthResponseDto.builder()
                     .accessToken(accessToken)
-                    .accessTokenExpiry(15 * 60)
+                    .accessTokenExpiry(24* 60 * 60)
                     .userName(userInfoEntity.getUsername())
                     .tokenType(TokenType.Bearer)
                     .build();
