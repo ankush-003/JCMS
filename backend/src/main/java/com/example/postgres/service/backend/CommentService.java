@@ -55,5 +55,10 @@ public class CommentService {
     }
 
 
+    public List<Comment> findCommentsByPostId(Long postId) {
+        return commentRepository.findCommentsByPostId(postId);
+    }
+
+
 
 }
