@@ -20,14 +20,14 @@ import java.util.List;
 
 @PageTitle("Channel")
 @Route(value="channel", layout = MainLayout.class)
-public class ChannelView extends Div implements HasUrlParameter<Long>  {
+public class ChannelView extends Div implements HasUrlParameter<String>  {
     private final PostService postService;
     private final UserService userService;
     private final VoteService voteService;
     private final ChannelService channelService;
     private final Button createPostButton = new Button("Create Post");
     private final Dialog dialog = new Dialog();
-    private Long channelId;
+    private String channelName;
 
     public ChannelView(PostService postService, UserService userService, VoteService voteService, ChannelService channelService) {
         this.postService = postService;
@@ -35,7 +35,7 @@ public class ChannelView extends Div implements HasUrlParameter<Long>  {
         this.voteService = voteService;
         this.channelService = channelService;
         createPostButton.addClickListener(event -> {
-            Channel channel = channelService.findByChannelId(channelId);
+            Channel channel = channelService.findByChannelName(channelName);
             PostForm postForm = new PostForm(userService.findByUserId(202L), postService, channel);
             dialog.add(postForm);
             dialog.open();
@@ -46,11 +46,11 @@ public class ChannelView extends Div implements HasUrlParameter<Long>  {
     }
 
     @Override
-    public void setParameter(BeforeEvent beforeEvent, Long channelId) {
-        if (channelId == null) {
+    public void setParameter(BeforeEvent beforeEvent, String channelName) {
+        if (channelName == null) {
             setText("No channel selected");
         } else {
-            this.channelId = channelId;
+            this.channelName = channelName;
             displayPosts();
         }
     }
@@ -58,7 +58,7 @@ public class ChannelView extends Div implements HasUrlParameter<Long>  {
     private void displayPosts() {
         removeAll();
         add(createPostButton);
-        List<Post> posts = postService.findPostsByChannelId(channelId);
+        List<Post> posts = postService.findPostsByChannelName(channelName);
         for (Post post : posts) {
             List<Vote> votes = voteService.findVotesByPostId(post.getId());
             post.setVotes(votes);

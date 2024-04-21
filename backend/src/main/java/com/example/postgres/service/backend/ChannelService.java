@@ -27,6 +27,10 @@ public class ChannelService {
         return channelRepository.findById(id).orElse(null);
     }
 
+    public Channel findByChannelName(String name) {
+        return channelRepository.findByName(name);
+    }
+
     public List<Channel> findAllChannels() {
         return channelRepository.findAll();
     }

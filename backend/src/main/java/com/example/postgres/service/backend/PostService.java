@@ -99,7 +99,7 @@ public class PostService {
         return ResponseEntity.ok(updatedPost);
     }
 
-    public List<Post> findPostsByChannelId(Long channelId) {
-        return postRepository.findByChannelId(channelId);
+    public List<Post> findPostsByChannelName(String channelName) {
+        return postRepository.findByChannelName(channelName);
     }
 }
