@@ -100,9 +100,6 @@ public class UserService {
         });
 
         return  channels;
-
-
-
     }
 
 //    public UserDetailsDto getUserData(Binder<UserDetailsDto> binder) {

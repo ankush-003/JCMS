@@ -39,7 +39,7 @@ public class PostForm extends FormLayout {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            // post.setUser(user);
+            post.setUser(user);
             post.setCreated_at(Instant.now());
             post.setChannel(channel);
             // Save the post using your service

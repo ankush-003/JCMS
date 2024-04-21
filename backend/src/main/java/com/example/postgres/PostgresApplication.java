@@ -19,7 +19,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @Push
 public class PostgresApplication implements AppShellConfigurator {
-
 	@Autowired
 	private  UserService userService;
 	public static void main(String[] args) {
