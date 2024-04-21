@@ -6,13 +6,13 @@ package com.example.postgres.controller;
 
 import com.example.postgres.classes.Post;
 import com.example.postgres.classes.PostDto;
+import com.example.postgres.service.backend.PostDtoService;
 import com.example.postgres.service.backend.PostService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,9 +20,11 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final PostDtoService postDtoService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, PostDtoService postDtoService) {
         this.postService = postService;
+        this.postDtoService = postDtoService;
     }
 
     @PreAuthorize("hasAuthority('SCOPE_WRITE')")
@@ -34,24 +36,14 @@ public class PostController {
     @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping("")
     public ResponseEntity<List<PostDto>> findAllPosts() {
-        List<Post> posts = postService.findAllPosts();
-        List<PostDto> postDtos = new ArrayList<>();
-        for (Post post : posts) {
-            PostDto postDto = PostDto.fromPostEntity(post);
-            postDtos.add(postDto);
-        }
+        List<PostDto> postDtos = postDtoService.findAllPosts();
         return ResponseEntity.ok(postDtos);
     }
 
     @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping("/user/{user-id}")
     public ResponseEntity<List<PostDto>> findUserSubscribedPosts(@PathVariable("user-id") Long id) {
-        List<Post> posts = postService.findUserSubscribedPosts(id);
-        List<PostDto> postDtos = new ArrayList<>();
-        for (Post post : posts) {
-            PostDto postDto = PostDto.fromPostEntity(post);
-            postDtos.add(postDto);
-        }
+        List<PostDto> postDtos = postDtoService.findUserSubscribedPosts(id);
         return ResponseEntity.ok(postDtos);
     }
 
