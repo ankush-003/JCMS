@@ -94,7 +94,10 @@ public class UserService {
 
         List<Channel> channels= new ArrayList<>(user.getSubscribedChannels());
 
-        channels.addAll(user.getChannels());
+        user.getChannels().stream().filter(channel -> !channels.contains(channel)).forEach(channel -> {
+            System.out.println("Channel: " + channel.getName() + " added to the list");
+            channels.add(channel);
+        });
 
         return  channels;
 

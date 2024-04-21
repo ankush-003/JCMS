@@ -22,6 +22,8 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteParameters;
+import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
 import java.io.BufferedReader;
@@ -73,6 +75,9 @@ public class ProfileView extends VerticalLayout {
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
                 return;
             }
+
+
+            statusLabel.setVisible(false);
 
             HorizontalLayout mainLayout = new HorizontalLayout();
 
@@ -142,19 +147,19 @@ public class ProfileView extends VerticalLayout {
             channelHeader.getStyle().set("text-align", "center");
             channelLayout.add(channelHeader);
 
-            List<Channel> channels = List.of(
-                    new Channel("Channel 1", "Channel 1 Description"),
-                    new Channel("Channel 2", "Channel 2 Description"),
-                    new Channel("Channel 3", "Channel 3 Description"),
-                    new Channel("Channel 4", "Channel 4 Description"),
-                    new Channel("Channel 5", "Channel 5 Description"),
-                    new Channel("Channel 6", "Channel 6 Description"),
-                    new Channel("Channel 7", "Channel 7 Description"),
-                    new Channel("Channel 8", "Channel 8 Description"),
-                    new Channel("Channel 9", "Channel 9 Description"),
-                    new Channel("Channel 10", "Channel 10 Description")
-
-            );
+//            List<Channel> channels = List.of(
+//                    new Channel("Channel 1", "Channel 1 Description"),
+//                    new Channel("Channel 2", "Channel 2 Description"),
+//                    new Channel("Channel 3", "Channel 3 Description"),
+//                    new Channel("Channel 4", "Channel 4 Description"),
+//                    new Channel("Channel 5", "Channel 5 Description"),
+//                    new Channel("Channel 6", "Channel 6 Description"),
+//                    new Channel("Channel 7", "Channel 7 Description"),
+//                    new Channel("Channel 8", "Channel 8 Description"),
+//                    new Channel("Channel 9", "Channel 9 Description"),
+//                    new Channel("Channel 10", "Channel 10 Description")
+//
+//            );
 
             VirtualList<Channel> virtualList = new VirtualList<>();
 //            virtualList.setItems(channels);
@@ -165,14 +170,22 @@ public class ProfileView extends VerticalLayout {
                 layout.setSpacing(true);
                 layout.setPadding(true);
 
-                Div chan = new Div();
-                chan.setText(channel.getName());
-                chan.getStyle().set("font-weight", "bold");
+                Div channelLink = new Div();
+                channelLink.setText(channel.getName());
+                channelLink.getStyle().set("font-weight", "bold");
+                channelLink.addClickListener(e -> {
+                    System.out.println(channel.getId());
+                    System.out.println(channel.getName());
+                    UI.getCurrent().navigate(ChannelView.class, new RouteParameters("channelName",channel.getName()));
+                });
+
 
                 Div description = new Div();
                 description.setText(channel.getDescription());
 
-                layout.add(chan, description);
+
+
+                layout.add(channelLink, description);
                 return layout;
             }));
 
