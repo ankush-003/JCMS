@@ -3,7 +3,7 @@ package com.example.postgres.view.list;
 import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.Post;
 import com.example.postgres.classes.User;
-import com.example.postgres.service.PostService;
+import com.example.postgres.service.backend.PostService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;

@@ -3,7 +3,7 @@ package com.example.postgres.config;
 import com.example.postgres.config.jwt.JwtAccessTokenFilter;
 import com.example.postgres.config.jwt.JwtRefreshTokenFilter;
 import com.example.postgres.repository.RefreshTokenRepository;
-import com.example.postgres.service.LogoutHandlerService;
+import com.example.postgres.service.frontend.LogoutHandlerService;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -41,7 +41,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.beans.Customizer;
 import java.util.Arrays;
 
 

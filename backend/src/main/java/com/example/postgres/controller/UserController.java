@@ -7,7 +7,7 @@ import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.User;
 import com.example.postgres.config.jwt.JwtTokenUtils;
 import com.example.postgres.dto.UserDetailsDto;
-import com.example.postgres.service.UserService;
+import com.example.postgres.service.backend.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -4,7 +4,7 @@
 package com.example.postgres.controller;
 
 import com.example.postgres.classes.Channel;
-import com.example.postgres.service.ChannelService;
+import com.example.postgres.service.backend.ChannelService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

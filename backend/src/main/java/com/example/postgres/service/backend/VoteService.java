@@ -3,7 +3,7 @@
 // Path: src/main/java/com/example/postgres/service/VoteService.java
 //
 
-package com.example.postgres.service;
+package com.example.postgres.service.backend;
 
 import com.example.postgres.classes.Vote;
 import com.example.postgres.repository.PostRepository;

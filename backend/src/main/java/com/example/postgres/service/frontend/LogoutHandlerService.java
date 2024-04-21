@@ -1,4 +1,4 @@
-package com.example.postgres.service;
+package com.example.postgres.service.frontend;
 
 
 import com.example.postgres.dto.TokenType;

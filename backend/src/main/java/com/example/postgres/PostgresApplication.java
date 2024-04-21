@@ -1,21 +1,16 @@
 package com.example.postgres;
 
-import com.example.postgres.classes.User;
 import com.example.postgres.config.RSAKeyRecord;
-import com.example.postgres.service.UserService;
+import com.example.postgres.service.backend.UserService;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
-
-import java.util.List;
 
 
 @EnableConfigurationProperties(RSAKeyRecord.class)

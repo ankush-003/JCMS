@@ -1,7 +1,7 @@
 package com.example.postgres.controller;
 
 import com.example.postgres.classes.Comment;
-import com.example.postgres.service.CommentService;
+import com.example.postgres.service.backend.CommentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

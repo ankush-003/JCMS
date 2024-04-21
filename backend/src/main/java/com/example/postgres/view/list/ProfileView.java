@@ -2,14 +2,11 @@ package com.example.postgres.view.list;
 
 import com.example.postgres.classes.Channel;
 import com.example.postgres.dto.UserDetailsDto;
-import com.example.postgres.service.ChannelService;
-import com.example.postgres.service.ChannelServiceFrontend;
-import com.example.postgres.service.UserService;
+import com.example.postgres.service.frontend.ChannelServiceFrontend;
+import com.example.postgres.service.backend.UserService;
 import com.example.postgres.view.MainLayout;
 import com.nimbusds.jose.shaded.gson.Gson;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H5;

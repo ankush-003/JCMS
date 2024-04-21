@@ -5,7 +5,7 @@
 package com.example.postgres.controller;
 
 import com.example.postgres.classes.Post;
-import com.example.postgres.service.PostService;
+import com.example.postgres.service.backend.PostService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

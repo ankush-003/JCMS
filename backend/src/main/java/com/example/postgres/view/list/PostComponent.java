@@ -2,7 +2,7 @@ package com.example.postgres.view.list;
 
 import com.example.postgres.classes.Post;
 import com.example.postgres.classes.Vote;
-import com.example.postgres.service.VoteService;
+import com.example.postgres.service.backend.VoteService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;

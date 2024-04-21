@@ -1,7 +1,7 @@
 package com.example.postgres.view.list;
 
 import com.example.postgres.dto.UserDetailsDto;
-import com.example.postgres.service.RegisterService;
+import com.example.postgres.service.frontend.RegisterService;
 import com.example.postgres.view.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;

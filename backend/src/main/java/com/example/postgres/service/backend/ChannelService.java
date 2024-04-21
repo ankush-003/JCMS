@@ -1,7 +1,7 @@
 // Write ChannelService similar to post and comment service
 
 // Path: src/main/java/com/example/postgres/service/ChannelService.java
-package com.example.postgres.service;
+package com.example.postgres.service.backend;
 
 import com.example.postgres.classes.Channel;
 import com.example.postgres.repository.ChannelRepository;
