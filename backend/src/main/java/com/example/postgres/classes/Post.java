@@ -70,4 +70,8 @@ public class Post {
             alwaysAsId = true
     )
     private List<Vote> votes;
+
+    public Post(Long id) {
+        this.id = id;
+    }
 }

@@ -3,9 +3,12 @@ package com.example.postgres.view.list;
 
 import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.PostDto;
+import com.example.postgres.classes.*;
+import com.example.postgres.dto.CommentDto;
 import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.service.backend.UserService;
 import com.example.postgres.service.frontend.ChannelServiceFrontend;
+import com.example.postgres.service.frontend.CommentFetcher;
 import com.example.postgres.service.frontend.PostServiceFrontend;
 import com.example.postgres.view.MainLayout;
 import com.nimbusds.jose.shaded.gson.Gson;
@@ -20,6 +23,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.page.WebStorage;
+import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.binder.Binder;
@@ -54,6 +58,8 @@ public class Home extends VerticalLayout {
     private VirtualList<PostDto> postList;
     private final Div statusLabel;
 
+    private final CommentFetcher commentFetcher;
+
 
 
     private UserService userService;
@@ -76,7 +82,6 @@ public class Home extends VerticalLayout {
                 Div user = new Div(new Text(post.getUserName()));
                 user.addClassName("post-user");
 
-
                 Div contact = new Div(user, channel);
                 contact.addClassName("post-contact");
 
@@ -88,29 +93,85 @@ public class Home extends VerticalLayout {
                 Div outer = new Div(card, contact);
                 outer.addClassName("post-outer");
 
-//                System.out.println("Post rendered" + post);
-
                 return outer;
             }
     );
 
     @NotNull
-    private static Div getInfo(PostDto post) {
+    private  Div getInfo(PostDto post) {
         Div title = new Div(new Text(post.getTitle()));
         title.addClassName("post-title");
 
         Div description = new Div(new Text(post.getDescription()));
         description.addClassName("post-description");
 
-        Div info = new Div(title, description);
+        // Comment Section
+        Div commentSection = new Div();
+        commentSection.addClassName("comment-section");
+
+        // Render comments from an endpoint
+        // Replace the following line with your code to fetch and render comments
+        Div commentList = new Div(); // This will contain the rendered comments
+
+        ComponentRenderer<Component, CommentDto> commentsRenderer = new ComponentRenderer<>(
+                comment -> {
+                    Div commentContainer = new Div();
+                    commentContainer.addClassName("comment-container");
+
+                    Div commentUser = new Div(new Text(comment.getUserName()));
+                    commentUser.addClassName("comment-user");
+
+                    Div commentText = new Div(new Text(comment.getCommentText()));
+                    commentText.addClassName("comment-text");
+
+                    commentContainer.add(commentUser, commentText);
+                    return commentContainer;
+                }
+        );
+
+        commentFetcher.fetchComments(post.getId())
+                .forEach(commentDto -> commentList.add(commentsRenderer.createComponent(commentDto)));
+
+        // Add a text field for new comments
+        TextArea newCommentField = new TextArea("Add a comment");
+        newCommentField.setWidthFull();
+
+        // Add a button to submit new comments
+        Button submitCommentButton = new Button("Submit");
+        // Replace the following line with your code to handle the submission of new comments
+        submitCommentButton.addClickListener(e -> {System.out.println("New comment: " + newCommentField.getValue());
+
+        UserDetailsDto user = new UserDetailsDto();
+        showStoredValue(user,()->{
+            Comment newComment = new Comment();
+            newComment.setDescription(newCommentField.getValue());
+
+            // Set the user and post IDs based on your application logic
+            newComment.setUser(new User(user.getUser_id()));
+            newComment.setPost(new Post(post.getId()));
+
+            commentFetcher.addComment(newComment);
+            getUI().ifPresent(ui -> ui.getPage().reload());
+
+
+        });
+
+        });
+
+        Div newCommentContainer = new Div(newCommentField, submitCommentButton);
+        newCommentContainer.addClassName("new-comment-container");
+
+        commentSection.add(commentList, newCommentContainer);
+
+        Div info = new Div(title, description, commentSection);
         info.addClassName("post-info");
 
         return info;
     }
 
-
     @Autowired
-    public Home(PostServiceFrontend postServiceFrontend,ChannelServiceFrontend channelServiceFrontend, UserService userService) {
+    public Home(PostServiceFrontend postServiceFrontend,ChannelServiceFrontend channelServiceFrontend, UserService userService, CommentFetcher commentFetcher) {
+        this.commentFetcher = commentFetcher;
         this.postServiceFrontend = postServiceFrontend;
         this.userService = userService;
         this.channelServiceFrontend = channelServiceFrontend;
