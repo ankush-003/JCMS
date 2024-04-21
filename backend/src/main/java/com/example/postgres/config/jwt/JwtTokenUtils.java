@@ -1,4 +1,5 @@
 package com.example.postgres.config.jwt;
+import com.example.postgres.classes.Channel;
 import com.example.postgres.classes.User;
 import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.stereotype.Component;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 import com.example.postgres.config.user.UserConfig;
 import com.example.postgres.config.RSAKeyRecord;
@@ -58,8 +60,11 @@ public class JwtTokenUtils {
 
         User user = userInfoRepo.findByEmail(jwtToken.getSubject()).orElseThrow(() -> new UsernameNotFoundException("UserEmail: " + jwtToken.getSubject() + " does not exist"));
 
+//         Get all subscribed channels of the user but only the names by iterating and sttore in List<String>
+        List<String> subscribedChannels = user.getSubscribedChannels().stream().map(Channel::getName).toList();
 
-        return new UserDetailsDto(user.getName(),user.getUsername(),user.getEmail(),user.getId());
+
+        return new UserDetailsDto(user.getName(),user.getUsername(),user.getEmail(),user.getId(), subscribedChannels);
     }
 
 }

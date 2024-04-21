@@ -142,6 +142,7 @@ public class LoginView extends VerticalLayout {
     private void navigateToMainView() {
         // Navigate to the main view after successful authentication
         // For example:
-        getUI().get().navigate(Home.class);
+        // Reload page
+        UI.getCurrent().getPage().reload();
     }
 }
