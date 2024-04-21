@@ -52,10 +52,8 @@ public class Post {
     )
     private User user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
-    @JsonIdentityReference(
-            alwaysAsId = true
-    )
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @JsonManagedReference(value="comment-post")
     private List<Comment> comments;
 
     @ManyToOne
@@ -66,7 +64,7 @@ public class Post {
     )
     private Channel channel;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JsonManagedReference(value="post-vote")
     @JsonIdentityReference(
             alwaysAsId = true

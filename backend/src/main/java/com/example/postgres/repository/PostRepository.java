@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByChannelId(Long channelId);
+
+    List<Post> findByChannelName(String channelName);
 }
