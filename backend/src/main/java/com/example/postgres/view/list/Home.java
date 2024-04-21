@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -58,7 +60,10 @@ public class Home extends VerticalLayout {
     private VirtualList<PostDto> postList;
     private final Div statusLabel;
 
+
     private final CommentFetcher commentFetcher;
+
+    private Button button;
 
 
 
@@ -91,9 +96,12 @@ public class Home extends VerticalLayout {
                 card.addClassName("post-card");
 
                 Div outer = new Div(card, contact);
+
+                Div actual_outer = new Div(outer, getCommentElement(post));
+                actual_outer.addClassName("post-full");
                 outer.addClassName("post-outer");
 
-                return outer;
+                return actual_outer;
             }
     );
 
@@ -106,12 +114,25 @@ public class Home extends VerticalLayout {
         description.addClassName("post-description");
 
         // Comment Section
+
+
+        Div info = new Div(title, description);
+        info.addClassName("post-info");
+
+        return info;
+    }
+
+    private Div getCommentElement(PostDto post) {
         Div commentSection = new Div();
         commentSection.addClassName("comment-section");
+
+        Div commentHeader = new Div(new Text("Comment Section"));
+        commentHeader.addClassName("comment-header");
 
         // Render comments from an endpoint
         // Replace the following line with your code to fetch and render comments
         Div commentList = new Div(); // This will contain the rendered comments
+        commentList.addClassName("comment-list");
 
         ComponentRenderer<Component, CommentDto> commentsRenderer = new ComponentRenderer<>(
                 comment -> {
@@ -124,7 +145,18 @@ public class Home extends VerticalLayout {
                     Div commentText = new Div(new Text(comment.getCommentText()));
                     commentText.addClassName("comment-text");
 
-                    commentContainer.add(commentUser, commentText);
+                    Date myDate = Date.from(comment.getDateTime());
+
+                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm, MMM d, yyyy");
+                    String formattedDate = formatter.format(myDate);
+
+                    Div commentTime =  new Div(formattedDate);
+                    commentTime.addClassName("comment-time");
+
+                    Div commentDeets = new Div(commentUser, commentTime);
+                    commentDeets.addClassName("comment-deets");
+
+                    commentContainer.add(commentDeets, commentText);
                     return commentContainer;
                 }
         );
@@ -133,40 +165,39 @@ public class Home extends VerticalLayout {
                 .forEach(commentDto -> commentList.add(commentsRenderer.createComponent(commentDto)));
 
         // Add a text field for new comments
-        TextArea newCommentField = new TextArea("Add a comment");
-        newCommentField.setWidthFull();
+        TextArea newCommentField = new TextArea();
+        newCommentField.addClassName("new-comment-field");
+        newCommentField.setPlaceholder("Add a comment...");
 
         // Add a button to submit new comments
         Button submitCommentButton = new Button("Submit");
+        submitCommentButton.addClassName("submit-comment-button");
         // Replace the following line with your code to handle the submission of new comments
         submitCommentButton.addClickListener(e -> {System.out.println("New comment: " + newCommentField.getValue());
 
-        UserDetailsDto user = new UserDetailsDto();
-        showStoredValue(user,()->{
-            Comment newComment = new Comment();
-            newComment.setDescription(newCommentField.getValue());
+            UserDetailsDto user = new UserDetailsDto();
+            showStoredValue(user,()->{
+                Comment newComment = new Comment();
+                newComment.setDescription(newCommentField.getValue());
 
-            // Set the user and post IDs based on your application logic
-            newComment.setUser(new User(user.getUser_id()));
-            newComment.setPost(new Post(post.getId()));
+                // Set the user and post IDs based on your application logic
+                newComment.setUser(new User(user.getUser_id()));
+                newComment.setPost(new Post(post.getId()));
 
-            commentFetcher.addComment(newComment);
-            getUI().ifPresent(ui -> ui.getPage().reload());
+                commentFetcher.addComment(newComment);
+                // Reload entire page
+                loadPosts();
 
-
-        });
+            });
 
         });
 
         Div newCommentContainer = new Div(newCommentField, submitCommentButton);
         newCommentContainer.addClassName("new-comment-container");
 
-        commentSection.add(commentList, newCommentContainer);
+        commentSection.add(commentHeader, commentList, newCommentContainer);
 
-        Div info = new Div(title, description, commentSection);
-        info.addClassName("post-info");
-
-        return info;
+        return commentSection;
     }
 
     @Autowired
@@ -262,6 +293,11 @@ public class Home extends VerticalLayout {
 
 
     private void loadPosts() {
+        if (postList != null) {
+            remove(postList);
+            remove(button);
+        }
+
         statusLabel.setVisible(true);
 
         UserDetailsDto user = new UserDetailsDto();
@@ -335,7 +371,7 @@ public class Home extends VerticalLayout {
             dialog.getFooter().add(cancelButton);
             dialog.getFooter().add(saveButton);
 
-            Button button = new Button("Create Channel", e -> dialog.open());
+            button = new Button("Create Channel", e -> dialog.open());
             button.addClassName("create-channel-button");
 
 

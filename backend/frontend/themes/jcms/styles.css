@@ -1,5 +1,21 @@
 @import "theme-editor.css";
 /* Profile Card Styles */
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+
+
+/*.martian-mono-1 {*/
+/*   font-family: "Martian Mono", monospace;*/
+/*   font-optical-sizing: auto;*/
+/*   font-style: normal;*/
+/*   font-variation-settings: "wdth" 100;*/
+/*}*/
+
+
+
+/** {*/
+/*    font-family: 'Inter', sans-serif;*/
+/*}*/
 
 :root {
     --primary : #300040;
@@ -122,15 +138,17 @@ vaadin-button {
 
 .post-outer {
     display: flex;
+
+}
+
+.post-full {
+    display: flex;
+    flex-direction: column;
     border-radius: 8px;
     border: 2px solid hsl(0, 0%, 10%);
     padding: 16px 16px;
     margin-bottom: 2em;
-}
-
-.post-outer:hover {
-    background: hsl(0, 0%, 5%);
-    cursor: pointer;
+    gap : 1rem;
 }
 
 .post-card {
@@ -261,4 +279,50 @@ vaadin-drawer-toggle {
 .channel-div-drawer:hover {
     background: hsl(0, 0%, 10%);
     cursor: pointer;
+}
+
+/*Comment Section*/
+.new-comment-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.new-comment-field {
+    flex: 1 1 0;
+    padding: 0;
+}
+
+.comment-header {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.comment-section {
+   /*background: hsl(0, 0%, 20%);*/
+    background: hsl(0, 0%, 5%);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.comment-deets{
+    font-size: small;
+    color: #6c757d;
+    display: flex;
+    justify-content: space-between;
+}
+
+.comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.comment-container {
+    padding : 8px;
+    background: hsl(0, 0%, 10%);
+    border-radius: 8px;
 }

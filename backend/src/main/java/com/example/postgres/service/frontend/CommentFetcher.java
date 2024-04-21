@@ -25,7 +25,7 @@ public class CommentFetcher {
         for (Comment comment : comments) {
             String userName = comment.getUser().getUsername();
             String commentText = comment.getDescription();
-            CommentDto commentDto = new CommentDto(userName, commentText);
+            CommentDto commentDto = new CommentDto(userName, commentText, comment.getCreated_at());
             commentDtos.add(commentDto);
         }
 

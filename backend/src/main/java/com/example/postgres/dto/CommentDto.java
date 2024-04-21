@@ -4,6 +4,8 @@ package com.example.postgres.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.time.Instant;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,5 +20,9 @@ public class CommentDto {
 
     @JsonProperty("comment_text")
     String commentText;
+
+    @JsonProperty("date_time")
+    Instant dateTime;
+
 
 }
