@@ -35,8 +35,8 @@ public class PostServiceFrontend implements Serializable {
                 posts -> {
                     System.out.println("Got all posts");
 //                    System.out.println(posts.getBody());
-                    System.out.println("generic user " + posts.getBody().getFirst().getUser());
-                    System.out.println("generic channel" + posts.getBody().getFirst().getChannel());
+//                    System.out.println("generic user " + posts.getBody().getFirst().getUser());
+//                    System.out.println("generic channel" + posts.getBody().getFirst().getChannel());
                     callback.operationFinished(posts.getBody());
                 }
         );
@@ -72,8 +72,8 @@ public class PostServiceFrontend implements Serializable {
                         posts -> {
                             System.out.println("Got all subscribed channel posts!");
 //                            System.out.println(posts.getBody());
-                            System.out.println("Subscriber user " + posts.getBody().getFirst().getUserName());
-                            System.out.println("Subscriber channel" + posts.getBody().getFirst().getChannelName());
+//                            System.out.println("Subscriber user " + posts.getBody().getFirst().getUserName());
+//                            System.out.println("Subscriber channel" + posts.getBody().getFirst().getChannelName());
                             callback.operationFinished(posts.getBody());
                         }
                 );

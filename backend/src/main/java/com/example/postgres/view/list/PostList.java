@@ -38,7 +38,7 @@ public class PostList extends Main {
     private ComponentRenderer<Component, Post> postsRenderer = new ComponentRenderer<>(
             post -> {
 
-                System.out.println("Rendering post" + post.getVotes().size() + " " + post.getComments() + " " + post.getCreated_at() + " " + post.getDescription() + " " + post.getId() + " " + post.getTitle() + " ");
+//                System.out.println("Rendering post" + post.getVotes().size() + " " + post.getComments() + " " + post.getCreated_at() + " " + post.getDescription() + " " + post.getId() + " " + post.getTitle() + " ");
 
 
                 StreamResource sr = new StreamResource("post", () -> {

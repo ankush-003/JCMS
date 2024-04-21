@@ -59,6 +59,7 @@ public class PostController {
                     .created_at(post.getCreated_at()).userName(post.getUser().getUsername())
                     .comments(commentIds).channelName(post.getChannel().getName())
                     .votes(voteIds).build();
+            postDtos.add(postDto);
         }
 
         return ResponseEntity.ok(postDtos);
