@@ -37,7 +37,7 @@ public class MainLayout extends AppLayout {
         Button logout = new Button("Log out", e -> {
             WebStorage.removeItem("access_token");
             getUI().ifPresent(ui -> ui.navigate("login"));
-            createDrawer(false);
+//            createDrawer(false);
         });
 
         Div userText = new Div(new Text("Logged in as anonimoose"));
