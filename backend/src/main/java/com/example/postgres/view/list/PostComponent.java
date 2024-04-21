@@ -1,8 +1,14 @@
 package com.example.postgres.view.list;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.postgres.classes.Post;
 import com.example.postgres.classes.Vote;
+import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.service.backend.VoteService;
+import com.example.postgres.utils.UserUtils;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
@@ -12,6 +18,7 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.server.StreamResource;
 
 import java.io.ByteArrayInputStream;
+import java.util.Date;
 import java.util.List;
 
 public class PostComponent extends Div {
@@ -34,21 +41,55 @@ public class PostComponent extends Div {
         Button downvoteButton = new Button("Downvote (" + getDownVotes(votes) + ")");
 
         upvoteButton.addClickListener(event -> {
-            Vote vote = new Vote();
-            vote.setVoteType(1);
-            vote.setPost(post);
-            post.getVotes().add(vote);
-            this.voteservice.saveVote(vote);
-            upvoteButton.setText("Upvote (" + (getUpVotes(post.getVotes())) + ")");
+            UserDetailsDto user = new UserDetailsDto();
+            UserUtils.showStoredValue(user, UI.getCurrent(), () -> {
+                if (user.getAccessToken() == null) {
+                    UI.getCurrent().navigate("register");
+                } else {
+                    try {
+                        DecodedJWT decodedJwt = JWT.decode(user.getAccessToken());
+                        Date expiresAt = decodedJwt.getExpiresAt();
+                        if (expiresAt.before(new Date())) {
+                            UI.getCurrent().navigate("register");
+                        } else {
+                            Vote vote = new Vote();
+                            vote.setVoteType(1);
+                            vote.setPost(post);
+                            post.getVotes().add(vote);
+                            this.voteservice.saveVote(vote);
+                            upvoteButton.setText("Upvote (" + (getUpVotes(post.getVotes())) + ")");
+                        }
+                    } catch (JWTDecodeException e) {
+                        UI.getCurrent().navigate("register");
+                    }
+                }
+            });
         });
 
         downvoteButton.addClickListener(event -> {
-            Vote vote = new Vote();
-            vote.setVoteType(0);
-            vote.setPost(post);
-            post.getVotes().add(vote);
-            this.voteservice.saveVote(vote);
-            downvoteButton.setText("Downvote (" + (getDownVotes(post.getVotes())) + ")");
+            UserDetailsDto user = new UserDetailsDto();
+            UserUtils.showStoredValue(user, UI.getCurrent(), () -> {
+                if (user.getAccessToken() == null) {
+                    UI.getCurrent().navigate("register");
+                } else {
+                    try {
+                        DecodedJWT decodedJwt = JWT.decode(user.getAccessToken());
+                        Date expiresAt = decodedJwt.getExpiresAt();
+                        if (expiresAt.before(new Date())) {
+                            UI.getCurrent().navigate("register");
+                        } else {
+                            Vote vote = new Vote();
+                            vote.setVoteType(0);
+                            vote.setPost(post);
+                            post.getVotes().add(vote);
+                            this.voteservice.saveVote(vote);
+                            downvoteButton.setText("Downvote (" + (getDownVotes(post.getVotes())) + ")");
+                        }
+                    } catch (JWTDecodeException e) {
+                        UI.getCurrent().navigate("register");
+                    }
+                }
+            });
         });
 
         HorizontalLayout smallFieldsLayout = new HorizontalLayout(upvoteButton, downvoteButton);
