@@ -257,6 +257,10 @@ public class ChannelView extends Div implements BeforeEnterObserver {
         return commentSection;
     }
 
+
+        add(createPostButton);
+    }
+
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
         Optional<String> channelNameParam = event.getRouteParameters().get("channelName");
