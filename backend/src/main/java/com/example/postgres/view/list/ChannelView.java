@@ -13,7 +13,6 @@ import com.example.postgres.service.backend.VoteService;
 import com.example.postgres.service.frontend.CommentFetcher;
 import com.example.postgres.service.frontend.PostServiceFrontend;
 import com.example.postgres.utils.UserUtils;
-import com.example.postgres.utils.UserUtils;
 import com.example.postgres.view.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
@@ -21,17 +20,14 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
@@ -39,7 +35,6 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
@@ -69,7 +64,7 @@ public class ChannelView extends Div implements BeforeEnterObserver {
 
     private final CommentFetcher commentFetcher;
 
-
+    private final Button subscribeButton = new Button("Subscribe");
     public ChannelView(PostService postService, UserService userService, VoteService voteService, ChannelService channelService, PostServiceFrontend postServiceFrontend, CommentFetcher commentFetcher) {
         this.postService = postService;
         this.userService = userService;
@@ -105,7 +100,32 @@ public class ChannelView extends Div implements BeforeEnterObserver {
             });
         });
         createPostButton.addClassName("create-channel-button");
-        add(createPostButton);
+        subscribeButton.addClickListener(e -> {
+            UserDetailsDto user = new UserDetailsDto();
+            UserUtils.showStoredValue(user, UI.getCurrent(), () -> {
+                if (user.getAccessToken() == null) {
+                    UI.getCurrent().navigate("register");
+                } else {
+                    try {
+                        Channel currentChannel = channelService.findByChannelName(channelName);
+                        userService.subscribeToChannel(currentChannel.getId(), user.getUser_id());
+                        System.out.println("subscribed to channel" + " " + currentChannel.getName()
+                        + " " + user.getUser_name());
+                        UI.getCurrent().getPage().reload();
+                    } catch (JWTDecodeException exception) {
+                        UI.getCurrent().navigate("register");
+                    }
+                }
+            });
+        });
+
+        HorizontalLayout buttonLayout = new HorizontalLayout();
+
+        buttonLayout.setSpacing(true);
+
+        buttonLayout.add(createPostButton, subscribeButton);
+
+        add(buttonLayout);
     }
 
     private ComponentRenderer<Component, PostDto> postsRenderer = new ComponentRenderer<>(

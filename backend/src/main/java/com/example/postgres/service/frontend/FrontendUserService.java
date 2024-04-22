@@ -112,9 +112,6 @@ public class FrontendUserService {
             throw new RuntimeException("Failed to fetch user data", e);
         }
     }
-
-
-
 }
 
 
