@@ -3,17 +3,17 @@ package com.example.postgres.view.list;
 
 import com.example.postgres.classes.PostDto;
 import com.example.postgres.dto.UserDetailsDto;
-import com.example.postgres.service.backend.UserService;
 import com.example.postgres.service.frontend.PostServiceFrontend;
+import com.example.postgres.utils.UserUtils;
 import com.example.postgres.view.MainLayout;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Main;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
@@ -33,13 +33,10 @@ public class PostList extends Main {
     private final PostServiceFrontend postServiceFrontend;
     private VirtualList<PostDto> postList;
     private final Div statusLabel;
-    private UserService userService;
 
-    private ComponentRenderer<Component, PostDto> postsRenderer = new ComponentRenderer<>(
+    private final ComponentRenderer<Component, PostDto> postsRenderer = new ComponentRenderer<>(
             post -> {
-                StreamResource sr = new StreamResource("post", () -> {
-                    return new ByteArrayInputStream(post.getContent());
-                });
+                StreamResource sr = new StreamResource("post", () -> new ByteArrayInputStream(post.getContent()));
                 sr.setContentType("image/png");
 
                 Image image = new Image(sr, "post");
@@ -84,18 +81,12 @@ public class PostList extends Main {
         return info;
     }
 
-    public PostList(@Autowired PostServiceFrontend postServiceFrontend, @Autowired UserService userService) {
+    public PostList(@Autowired PostServiceFrontend postServiceFrontend) {
         this.postServiceFrontend = postServiceFrontend;
-        this.userService = userService;
-
         statusLabel = new Div("Hold on tight...");
         statusLabel.addClassName("status-label");
         statusLabel.setVisible(false);
 
-
-//        Button newPostButton = new Button("New Post", e -> {
-//            getUI().ifPresent(ui -> ui.navigate(NewPost.class));
-//        });
         loadPosts();
 
         add(statusLabel);
@@ -105,7 +96,7 @@ public class PostList extends Main {
         statusLabel.setVisible(true);
 
         UserDetailsDto user = new UserDetailsDto();
-        showStoredValue(user, () -> {
+        UserUtils.showStoredValue(user,UI.getCurrent(), () -> {
             if (user.getAccessToken() == null) {
                 statusLabel.setText("Please log in.");
                 statusLabel.addClassNames(LumoUtility.TextColor.ERROR);
@@ -134,14 +125,4 @@ public class PostList extends Main {
         });
     }
 
-    private void showStoredValue(UserDetailsDto user, Runnable callback) {
-        WebStorage.getItem(
-                "access_token",
-                value -> {
-                    System.out.println("Stored value: " + (value == null ? "<no value stored>" : value));
-                    user.setAccessToken(value);
-                    callback.run(); // Call the callback after retrieving the access token
-                }
-        );
-    }
 }

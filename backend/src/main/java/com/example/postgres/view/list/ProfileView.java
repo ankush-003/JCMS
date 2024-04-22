@@ -3,10 +3,8 @@ package com.example.postgres.view.list;
 import com.example.postgres.classes.Channel;
 import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.service.frontend.ChannelServiceFrontend;
-import com.example.postgres.service.backend.UserService;
 import com.example.postgres.utils.UserUtils;
 import com.example.postgres.view.MainLayout;
-import com.nimbusds.jose.shaded.gson.Gson;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -16,7 +14,6 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.binder.Binder;
@@ -24,16 +21,8 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParameters;
-import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import org.jetbrains.annotations.NotNull;
 
 @PageTitle("My Profile")
 @Route(value="profile", layout = MainLayout.class)
@@ -42,12 +31,9 @@ public class ProfileView extends VerticalLayout {
 
     private final Span statusLabel;
 
+    private final ChannelServiceFrontend channelServiceFrontend;
 
-    private  UserService userService;
-
-    private  ChannelServiceFrontend channelServiceFrontend;
-
-    public ProfileView(UserService userService, ChannelServiceFrontend channelServiceFrontend) {
+    public ProfileView(ChannelServiceFrontend channelServiceFrontend) {
         this.channelServiceFrontend = channelServiceFrontend;
 
         statusLabel = new Span("Loading ...");
@@ -148,56 +134,12 @@ public class ProfileView extends VerticalLayout {
             channelHeader.getStyle().set("text-align", "center");
             channelLayout.add(channelHeader);
 
-//            List<Channel> channels = List.of(
-//                    new Channel("Channel 1", "Channel 1 Description"),
-//                    new Channel("Channel 2", "Channel 2 Description"),
-//                    new Channel("Channel 3", "Channel 3 Description"),
-//                    new Channel("Channel 4", "Channel 4 Description"),
-//                    new Channel("Channel 5", "Channel 5 Description"),
-//                    new Channel("Channel 6", "Channel 6 Description"),
-//                    new Channel("Channel 7", "Channel 7 Description"),
-//                    new Channel("Channel 8", "Channel 8 Description"),
-//                    new Channel("Channel 9", "Channel 9 Description"),
-//                    new Channel("Channel 10", "Channel 10 Description")
-//
-//            );
 
-            VirtualList<Channel> virtualList = new VirtualList<>();
-//            virtualList.setItems(channels);
-
-            virtualList.setRenderer(new ComponentRenderer<>(channel -> {
-                HorizontalLayout layout = new HorizontalLayout();
-                layout.setAlignItems(Alignment.CENTER);
-                layout.setSpacing(true);
-                layout.setPadding(true);
-
-                Div channelLink = new Div();
-                channelLink.setText(channel.getName());
-                channelLink.getStyle().set("font-weight", "bold");
-                channelLink.addClickListener(e -> {
-                    System.out.println(channel.getId());
-                    System.out.println(channel.getName());
-                    UI.getCurrent().navigate(ChannelView.class, new RouteParameters("channelName",channel.getName()));
-                });
-
-
-                Div description = new Div();
-                description.setText(channel.getDescription());
-
-
-
-                layout.add(channelLink, description);
-                return layout;
-            }));
+            VirtualList<Channel> virtualList = getChannelVirtualList();
 
             channelLayout.add(virtualList);
             mainLayout.add(channelLayout); // Add the channelLayout to the mainLayout
             add(mainLayout); // Add the mainLayout to the ProfileView
-
-//            Button button = new Button("Get Details",
-//                    e -> userService.getUserData(binder));
-//
-//            add(button);
 
 
 
@@ -210,5 +152,36 @@ public class ProfileView extends VerticalLayout {
 
 
             });
+    }
+
+    @NotNull
+    private static VirtualList<Channel> getChannelVirtualList() {
+        VirtualList<Channel> virtualList = new VirtualList<>();
+
+        virtualList.setRenderer(new ComponentRenderer<>(channel -> {
+            HorizontalLayout layout = new HorizontalLayout();
+            layout.setAlignItems(Alignment.CENTER);
+            layout.setSpacing(true);
+            layout.setPadding(true);
+
+            Div channelLink = new Div();
+            channelLink.setText(channel.getName());
+            channelLink.getStyle().set("font-weight", "bold");
+            channelLink.addClickListener(e -> {
+                System.out.println(channel.getId());
+                System.out.println(channel.getName());
+                UI.getCurrent().navigate(ChannelView.class, new RouteParameters("channelName",channel.getName()));
+            });
+
+
+            Div description = new Div();
+            description.setText(channel.getDescription());
+
+
+
+            layout.add(channelLink, description);
+            return layout;
+        }));
+        return virtualList;
     }
 }
