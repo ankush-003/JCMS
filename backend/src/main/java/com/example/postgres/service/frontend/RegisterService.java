@@ -1,18 +1,15 @@
 package com.example.postgres.service.frontend;
 
+import com.example.postgres.dto.AuthResponseDto;
 import com.example.postgres.view.list.Home;
+import com.nimbusds.jose.shaded.gson.Gson;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.page.WebStorage;
+import okhttp3.*;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 @Service
 public class RegisterService {
@@ -40,11 +37,13 @@ public class RegisterService {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
+                ResponseBody responseBody = response.body();
                 // Handle successful response
-                String accessToken = response.body().string();
-                System.out.println("Access Token: " + accessToken);
-                // Store access token in web storage
-                WebStorage.setItem("access_token", accessToken);
+                Gson gson = new Gson();
+                AuthResponseDto entity = gson.fromJson(responseBody.string(), AuthResponseDto.class);
+                System.out.println(entity.getAccessToken());
+
+                WebStorage.setItem("access_token", entity.getAccessToken());
                 return true;
             } else {
                 System.err.println("Registration failed. Response Code: " + response.code());
@@ -58,6 +57,7 @@ public class RegisterService {
 
 
     public void navigateToMainView() {
+        UI.getCurrent().getPage().reload();
         UI.getCurrent().navigate(Home.class);
     }
 }

@@ -119,7 +119,7 @@ public class LoginView extends VerticalLayout {
             in.close();
 
             JSONObject jsonResponse = new JSONObject(response.toString());
-            String accessToken = jsonResponse.getString("access_token");
+            String accessToken = jsonResponse.getString("accessToken");
             System.out.println("Access Token: " + accessToken);
             // Store access token in web storage
             WebStorage.setItem("access_token", accessToken);
