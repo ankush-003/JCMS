@@ -326,3 +326,13 @@ vaadin-drawer-toggle {
     background: hsl(0, 0%, 10%);
     border-radius: 8px;
 }
+
+.card {
+    background: hsl(0, 0%, 10%);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: fit-content;
+}

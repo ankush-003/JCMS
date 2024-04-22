@@ -48,6 +48,14 @@ public class PostController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_READ')")
+    @GetMapping("/channel/{channel-name}")
+    public ResponseEntity<List<PostDto>> findChannelPosts(@PathVariable("channel-name") String channelName) {
+        List<PostDto> postDtos = postDtoService.findChannelPosts(channelName);
+        return ResponseEntity.ok(postDtos);
+    }
+
+
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
     @GetMapping("/{post-id}")
     public Post findByPostId(@PathVariable("post-id") Long id) {
         return postService.findByPostId(id);

@@ -31,6 +31,8 @@ public class PostService {
         return postRepository.findById(id).orElse(null);
     }
 
+
+
     public List<Post> findUserSubscribedPosts(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
@@ -92,6 +94,10 @@ public class PostService {
     }
 
     public List<Post> findPostsByChannelName(String channelName) {
+        return postRepository.findByChannelName(channelName);
+    }
+
+    public List<Post> findChannelPosts(String channelName) {
         return postRepository.findByChannelName(channelName);
     }
 }

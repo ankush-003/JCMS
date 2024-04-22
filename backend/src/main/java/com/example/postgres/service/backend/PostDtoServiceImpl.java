@@ -29,4 +29,11 @@ public class PostDtoServiceImpl implements PostDtoService {
         List<PostDto> postDtos = posts.stream().map(PostDto::fromPostEntity).toList();
         return postDtos;
     }
+
+    @Override
+    public List<PostDto> findChannelPosts(String name) {
+        List<Post> posts = postService.findChannelPosts(name);
+        List<PostDto> postDtos = posts.stream().map(PostDto::fromPostEntity).toList();
+        return postDtos;
+    }
 }

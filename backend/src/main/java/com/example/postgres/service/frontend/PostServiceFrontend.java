@@ -41,6 +41,30 @@ public class PostServiceFrontend implements Serializable {
         );
     }
 
+    public void getChannelPosts(AsyncRestCallback<List<PostDto>> callback, String accessToken, String channelName) {
+        System.out.println("Getting all posts");
+
+        WebClient.RequestHeadersSpec<?> spec = WebClient.builder().codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024))
+                .build()
+                .get()
+                .uri(
+                        "http://localhost:8080/api/posts/channel/" + channelName
+                ).header("Authorization", "Bearer " + accessToken)
+                .header("Content-Type", "application/json");
+
+        spec.retrieve().toEntityList(PostDto.class).subscribe(
+                posts -> {
+                    System.out.println("Got all posts");
+//                    System.out.println(posts.getBody());
+//                    System.out.println("generic user " + posts.getBody().getFirst().getUser());
+//                    System.out.println("generic channel" + posts.getBody().getFirst().getChannel());
+                    callback.operationFinished(posts.getBody());
+                }
+        );
+    }
+
+
+
 
     public void getSubscribedPosts(AsyncRestCallback<List<PostDto>> callback, String accessToken) {
         System.out.println("Getting posts of channels you have subscribed to:");

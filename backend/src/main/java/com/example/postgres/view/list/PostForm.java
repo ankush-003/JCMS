@@ -6,6 +6,7 @@ import com.example.postgres.classes.User;
 import com.example.postgres.service.backend.PostService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -48,6 +49,11 @@ public class PostForm extends FormLayout {
             getUI().ifPresent(ui -> ui.getPage().reload());
         });
 
-        add(titleField, descriptionField, new Span("Upload Content:"), upload, submitButton);
+        Div card = new Div();
+        card.getStyle().remove("width");
+        card.addClassName("card");
+        card.add(titleField, descriptionField, new Span("Upload Content:"), upload, submitButton);
+
+        add(card);
     }
 }
