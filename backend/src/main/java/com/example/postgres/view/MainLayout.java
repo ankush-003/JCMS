@@ -168,7 +168,7 @@ public class MainLayout extends AppLayout {
             registerLayout.setVisible(false);
 
             frontendUserService.getSubscribedChannels(token).forEach(channelName -> {
-                Anchor channelLink = new Anchor("channel/" + channelName, channelName);
+                Div channelLink = new Div(channelName);
                 Div individualChannelDiv  = new Div(new Icon(VaadinIcon.ARROW_RIGHT),channelLink );
                 individualChannelDiv.addClickListener(e -> {
                     UI.getCurrent().navigate(ChannelView.class, new RouteParameters("channelName",channelName));
