@@ -66,4 +66,8 @@ public class ChannelService {
         List<Channel> channels = channelRepository.searchChannelBy(name);
         return ResponseEntity.ok(channels);
     }
+
+    public ResponseEntity<List<Channel>> searchAll() {
+        return ResponseEntity.ok(channelRepository.findAll());
+    }
 }

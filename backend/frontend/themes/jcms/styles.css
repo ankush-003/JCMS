@@ -212,7 +212,17 @@ vaadin-drawer-toggle {
     font-size: large;
     background: var(--primary);
     border-radius: 5px;
+}
 
+.all-channels-button {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    font-weight: bold;
+    font-size: large;
+    background: var(--primary);
+    border-radius: 5px;
+    width: 100%;
 }
 
 .sub-heading:hover {
@@ -286,7 +296,7 @@ vaadin-drawer-toggle {
 }
 .channel-div-drawer {
     border-radius: 5px;
-    width: auto;
+    width: 100%;
     padding: 8px 16px;
     display: flex;
     align-items: center;

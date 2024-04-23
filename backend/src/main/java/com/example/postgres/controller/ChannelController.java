@@ -58,8 +58,13 @@ public class ChannelController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_READ')")
-    @GetMapping("/search/{channel-name}")
-    public ResponseEntity<List<Channel>> findByChannelName(@PathVariable("channel-name") String name) {
+    @GetMapping("/search/{name}")
+    public ResponseEntity<List<Channel>> findByChannelName(@PathVariable(required = false) String name) {
         return channelService.searchChannelBy(name);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Channel>> findByChannelName() {
+        return channelService.searchAll();
     }
 }

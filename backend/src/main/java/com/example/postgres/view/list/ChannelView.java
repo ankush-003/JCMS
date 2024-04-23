@@ -71,6 +71,10 @@ public class ChannelView extends Div implements BeforeEnterObserver {
     private Long userId;
     private Long channelId;
 
+    private List<String> subscribed_channels;
+
+    private Button subscribeButton;
+
 
     public ChannelView(PostService postService, UserService userService, ChannelService channelService, ChannelServiceFrontend channelServiceFrontend, PostServiceFrontend postServiceFrontend, CommentFetcher commentFetcher) {
         this.postService = postService;
@@ -290,13 +294,16 @@ public class ChannelView extends Div implements BeforeEnterObserver {
     @NotNull
     private Button getButton() {
         System.out.println("Is Subscribed to Channel: " + isSubscribedToChannel());
-        if (isSubscribedToChannel()) {
-            Button unsubscribeButton = new Button("Subscribed");
-            unsubscribeButton.addClassName("unsubscribe-channel-button");
-            return unsubscribeButton;
-        }
-        Button subscribeButton = new Button("Subscribe");
+        subscribeButton = new Button("Subscribe");
         subscribeButton.addClickListener(e -> {
+            System.out.println("Subscribing to channel: " + channelName);
+            System.out.println(subscribed_channels);
+            if (subscribed_channels!= null && subscribed_channels.contains(channelName)) {
+                Notification notification = Notification
+                        .show("You are already subscribed to this channel.", 3000, Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                return;
+            }
             channelServiceFrontend.subscribeToChannel(channelId, token, userId);
             UI.getCurrent().getPage().reload();
         });
@@ -331,6 +338,16 @@ public class ChannelView extends Div implements BeforeEnterObserver {
             token = user.getAccessToken();
             userId = user.getUser_id();
             channelId = channelService.findByChannelName(channelName).getId();
+            System.out.println("Subbed channels: " + userId);
+            if (user.getSubscribed_channels() != null) {
+                subscribed_channels = user.getSubscribed_channels();
+                if (subscribed_channels.contains(channelName)) {
+                    subscribeButton.setText("Unsubscribe");
+                    subscribeButton.removeClassName("subscribe-channel-button");
+                    subscribeButton.addClassName("unsubscribe-channel-button");
+                    subscribeButton.setDisableOnClick(true);
+                }
+            }
 
             postServiceFrontend.getChannelPosts(posts -> {
                 System.out.println("Got all posts in PostList");

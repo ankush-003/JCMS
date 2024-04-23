@@ -141,6 +141,12 @@ public class MainLayout extends AppLayout {
         Div channelDiv = new Div("Subscribed Channels");
         channelDiv.addClassNames("sub-heading");
 
+        Button allChannelsDiv = new Button("View Channels");
+        allChannelsDiv.addClassNames("all-channels-button");
+        allChannelsDiv.addClickListener(e -> {
+            UI.getCurrent().navigate("/search");
+        });
+
         homeLayout.addClickListener(e -> {
             UI.getCurrent().navigate("/home");
         });
@@ -183,6 +189,7 @@ public class MainLayout extends AppLayout {
             profileLayout.setVisible(false);
             allPostsLayout.setVisible(false);
             channelDiv.setVisible(false);
+            allChannelsDiv.setVisible(false);
         }
 
         drawer = new VerticalLayout(
@@ -193,7 +200,8 @@ public class MainLayout extends AppLayout {
                 allPostsLayout,
                 profileLayout,
                 channelDiv,
-                channelLayout
+                channelLayout,
+                allChannelsDiv
         );
 
         drawer.addClassName("drawer");

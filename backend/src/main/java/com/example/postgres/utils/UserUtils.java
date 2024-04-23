@@ -27,6 +27,7 @@ public class UserUtils {
                                     user.setName(userData.getName());
                                     user.setUser_email(userData.getUser_email());
                                     user.setUser_name(userData.getUser_name());
+                                    user.setSubscribed_channels(userData.getSubscribed_channels());
                                     System.out.println("set");
                                     callback.run(); // Call the callback after retrieving user details
                                 }))

@@ -9,6 +9,7 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.page.WebStorage;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.Route;
 
 import java.io.IOException;
@@ -24,15 +25,25 @@ public class SearchView extends Div
 
 
     @Override
-    public void setParameter(BeforeEvent beforeEvent, String s) {
+    public void setParameter(BeforeEvent beforeEvent, @OptionalParameter String s) {
+
+
         removeAll();
-        Div searchText = new Div( new Text(String.format("You searched for %s!", s)));
+        String headingText;
+        if (s == null) {
+            headingText = "Showing All Channels";
+        } else {
+            headingText = String.format("You searched for %s!", s);
+        }
+        Div searchText = new Div( new Text(headingText));
         searchText.addClassName("search-text");
         add(searchText);
         loading = new Div(new Text("Loading..."));
         loading.addClassName("loading");
         add(loading);
         CheckTokenValidation(s);
+
+
     }
 
 

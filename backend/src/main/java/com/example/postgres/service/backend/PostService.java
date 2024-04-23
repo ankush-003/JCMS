@@ -52,8 +52,13 @@ public class PostService {
 //            List<Post>  ChannelPosts = postRepository.findByChannelId(channel.getId());
             List<Post>  ChannelPosts = postRepository.findByChannelIdModified(channel.getId(), 10);
             posts.addAll(ChannelPosts);
-
         }
+
+        // sort posts by created_at, latest first
+
+        posts.sort((p1, p2) -> p2.getCreated_at().compareTo(p1.getCreated_at()));
+
+
 
         return posts;
     }
