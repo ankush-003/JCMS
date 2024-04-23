@@ -24,7 +24,13 @@ public class PostService {
     }
 
     public List<Post> findAllPosts() {
-        return postRepository.findAll();
+//        return postRepository.findAll();
+        return postRepository.findAllPostsModified(10);
+    }
+
+
+    public List<Post> findAllPostsWithLimit(int limit) {
+        return postRepository.findAllPostsModified(limit);
     }
 
     public Post findByPostId(Long id) {
@@ -43,8 +49,10 @@ public class PostService {
         List<Post> posts = new ArrayList<>();
 
         for (Channel channel : channels) {
-            List<Post>  ChannelPosts = postRepository.findByChannelId(channel.getId());
+//            List<Post>  ChannelPosts = postRepository.findByChannelId(channel.getId());
+            List<Post>  ChannelPosts = postRepository.findByChannelIdModified(channel.getId(), 10);
             posts.addAll(ChannelPosts);
+
         }
 
         return posts;
@@ -94,10 +102,13 @@ public class PostService {
     }
 
     public List<Post> findPostsByChannelName(String channelName) {
-        return postRepository.findByChannelName(channelName);
+//        return postRepository.findByChannelName(channelName);
+        return postRepository.findByChannelNameModified(channelName, 10);
     }
 
     public List<Post> findChannelPosts(String channelName) {
-        return postRepository.findByChannelName(channelName);
+//        return postRepository.findByChannelName(channelName);
+        return postRepository.findByChannelNameModified(channelName, 10);
     }
+
 }
