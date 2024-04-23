@@ -171,7 +171,7 @@ public class MainLayout extends AppLayout {
                 Anchor channelLink = new Anchor("channel/" + channelName, channelName);
                 Div individualChannelDiv  = new Div(new Icon(VaadinIcon.ARROW_RIGHT),channelLink );
                 individualChannelDiv.addClickListener(e -> {
-                    UI.getCurrent().navigate("channel/" + channelName);
+                    UI.getCurrent().navigate(ChannelView.class, new RouteParameters("channelName",channelName));
                 });
 
                 individualChannelDiv.addClassName("channel-div-drawer");

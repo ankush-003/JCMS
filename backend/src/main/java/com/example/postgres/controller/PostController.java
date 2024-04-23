@@ -5,7 +5,7 @@
 package com.example.postgres.controller;
 
 import com.example.postgres.classes.Post;
-import com.example.postgres.classes.PostDto;
+import com.example.postgres.dto.PostDto;
 import com.example.postgres.service.backend.PostDtoService;
 import com.example.postgres.service.backend.PostService;
 import org.springframework.http.MediaType;

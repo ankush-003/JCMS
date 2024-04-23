@@ -4,8 +4,6 @@ import com.example.postgres.classes.Channel;
 import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.service.frontend.ChannelServiceFrontend;
 import com.example.postgres.utils.UserUtils;
-import com.example.postgres.service.backend.UserService;
-import com.example.postgres.utils.UserUtils;
 import com.example.postgres.view.MainLayout;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Div;

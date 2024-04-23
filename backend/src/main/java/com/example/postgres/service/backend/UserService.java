@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +55,6 @@ public class UserService {
         return ResponseEntity.ok().body(message);
     }
 
-    @Transactional
     public ResponseEntity<User> subscribeToChannel(Long channel_id, Long user_id) {
 
         User user = userRepository.findById(user_id).orElse(null);

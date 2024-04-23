@@ -56,6 +56,7 @@ public class Post {
     @JsonIdentityReference(
             alwaysAsId = true
     )
+//    @JsonManagedReference(value="post-comment")
     private List<Comment> comments;
 
     @ManyToOne

@@ -1,6 +1,6 @@
 package com.example.postgres.service.backend;
 
-import com.example.postgres.classes.PostDto;
+import com.example.postgres.dto.PostDto;
 
 import java.util.List;
 

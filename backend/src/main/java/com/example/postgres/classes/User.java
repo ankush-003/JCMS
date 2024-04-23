@@ -71,7 +71,7 @@ public class User {
     )
     private List<Channel> channels;
 
-    @ManyToMany(mappedBy = "subscribers", cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "subscribers", cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @JsonIdentityReference(
             alwaysAsId = true
     )

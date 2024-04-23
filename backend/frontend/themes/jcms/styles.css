@@ -127,9 +127,7 @@ vaadin-button {
     border-radius: 8px;
     flex-shrink: 0;
 }
-.create-channel-button {
-    margin-left: 2rem;
-}
+
 .post-list {
     min-height : 100px;
     height: fit-content;
@@ -335,4 +333,38 @@ vaadin-drawer-toggle {
     flex-direction: column;
     gap: 8px;
     width: fit-content;
+}
+
+/*Channel Page*/
+
+.channel-header {
+    padding: 0 2rem;
+    font-size: xx-large;
+}
+
+.header-channel-name {
+    font-weight: bold;
+    font-size: xxx-large;
+    color: var(--primary);
+}
+
+.channel-buttons {
+    margin-left: 2rem;
+}
+
+.create-channel-button {
+    margin-left: 1rem;
+}
+
+.unsubscribe-channel-button {
+    opacity: 50%;
+}
+
+.unsubscribe-channel-button:hover {
+    cursor: default;
+    background: var(--primary);
+}
+
+.post-list:nth-child(1) {
+    display: none;
 }

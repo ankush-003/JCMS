@@ -2,7 +2,7 @@ package com.example.postgres.view.list;
 
 
 import com.example.postgres.classes.Channel;
-import com.example.postgres.classes.PostDto;
+import com.example.postgres.dto.PostDto;
 import com.example.postgres.classes.*;
 import com.example.postgres.dto.CommentDto;
 import com.example.postgres.dto.UserDetailsDto;
@@ -128,11 +128,12 @@ public class Home extends VerticalLayout {
         Div commentList = new Div(); // This will contain the rendered comments
         commentList.addClassName("comment-list");
 
-        ComponentRenderer<Component, CommentDto> commentsRenderer = new ComponentRenderer<>(
+        List<CommentDto> comments = post.getComments();
+
+        comments.forEach(
                 comment -> {
                     Div commentContainer = new Div();
                     commentContainer.addClassName("comment-container");
-
                     Div commentUser = new Div(new Text(comment.getUserName()));
                     commentUser.addClassName("comment-user");
 
@@ -149,14 +150,13 @@ public class Home extends VerticalLayout {
 
                     Div commentDeets = new Div(commentUser, commentTime);
                     commentDeets.addClassName("comment-deets");
-
                     commentContainer.add(commentDeets, commentText);
-                    return commentContainer;
+
+                    commentList.add(commentContainer);
+
                 }
         );
 
-        commentFetcher.fetchComments(post.getId())
-                .forEach(commentDto -> commentList.add(commentsRenderer.createComponent(commentDto)));
 
         // Add a text field for new comments
         TextArea newCommentField = new TextArea();
@@ -180,10 +180,8 @@ public class Home extends VerticalLayout {
 
                 commentFetcher.addComment(newComment);
                 // Reload entire page
-                loadPosts();
-
+                UI.getCurrent().getPage().reload();
             });
-
         });
 
         Div newCommentContainer = new Div(newCommentField, submitCommentButton);

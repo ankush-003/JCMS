@@ -86,6 +86,44 @@ public class ChannelServiceFrontend {
         }
     }
 
+    // Write function to see if user is subscribed to a channel
+
+    public void subscribeToChannel(Long channelId, String accessToken, Long userId) {
+        HttpURLConnection connection = null;
+        try {
+            URI baseUri = URI.create("http://localhost:8080/api/users/"); // Change to http instead of https
+            URI channelsUri = baseUri.resolve(userId + "/subscribe/" + channelId);
+            URL url = channelsUri.toURL();
+
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Authorization", "Bearer " + accessToken);
+            connection.setDoOutput(true);
+
+            // Send JSON data
+            try (OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream())) {
+                writer.write("");
+            }
+
+            // Check response code
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                System.err.println("Subscribing to channel failed. Response Code: " + responseCode);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error subscribing to channel: " + e.getMessage());
+        } finally {
+            // Disconnect connection
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+    }
+
 
 
     public void setChannels(VirtualList<Channel> virtualList, String accessToken, Long userID) {

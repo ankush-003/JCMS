@@ -3,7 +3,7 @@ package com.example.postgres.view.list;
 
 import com.example.postgres.classes.Comment;
 import com.example.postgres.classes.Post;
-import com.example.postgres.classes.PostDto;
+import com.example.postgres.dto.PostDto;
 import com.example.postgres.classes.User;
 import com.example.postgres.dto.CommentDto;
 import com.example.postgres.dto.UserDetailsDto;
@@ -111,11 +111,12 @@ public class PostList extends Main {
         Div commentList = new Div(); // This will contain the rendered comments
         commentList.addClassName("comment-list");
 
-        ComponentRenderer<Component, CommentDto> commentsRenderer = new ComponentRenderer<>(
+        List<CommentDto> comments = post.getComments();
+
+        comments.forEach(
                 comment -> {
                     Div commentContainer = new Div();
                     commentContainer.addClassName("comment-container");
-
                     Div commentUser = new Div(new Text(comment.getUserName()));
                     commentUser.addClassName("comment-user");
 
@@ -132,14 +133,13 @@ public class PostList extends Main {
 
                     Div commentDeets = new Div(commentUser, commentTime);
                     commentDeets.addClassName("comment-deets");
-
                     commentContainer.add(commentDeets, commentText);
-                    return commentContainer;
+
+                    commentList.add(commentContainer);
+
                 }
         );
 
-        commentFetcher.fetchComments(post.getId())
-                .forEach(commentDto -> commentList.add(commentsRenderer.createComponent(commentDto)));
 
         // Add a text field for new comments
         TextArea newCommentField = new TextArea();
@@ -208,7 +208,7 @@ public class PostList extends Main {
 
                     System.out.println("Rendered all posts in PostList");
 
-                    this.posts = posts;
+
                     postList = new VirtualList<>();
                     postList.setItems(posts);
                     postList.setRenderer(postsRenderer);

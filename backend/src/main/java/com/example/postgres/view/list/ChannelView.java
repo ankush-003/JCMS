@@ -5,11 +5,13 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.postgres.classes.*;
 import com.example.postgres.dto.CommentDto;
+import com.example.postgres.dto.PostDto;
 import com.example.postgres.dto.UserDetailsDto;
 import com.example.postgres.service.backend.ChannelService;
 import com.example.postgres.service.backend.PostService;
 import com.example.postgres.service.backend.UserService;
 import com.example.postgres.service.backend.VoteService;
+import com.example.postgres.service.frontend.ChannelServiceFrontend;
 import com.example.postgres.service.frontend.CommentFetcher;
 import com.example.postgres.service.frontend.PostServiceFrontend;
 import com.example.postgres.utils.UserUtils;
@@ -21,9 +23,9 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.virtuallist.VirtualList;
 import com.vaadin.flow.data.binder.Binder;
@@ -40,6 +42,7 @@ import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @PageTitle("Channel")
@@ -47,13 +50,12 @@ import java.util.Optional;
 public class ChannelView extends Div implements BeforeEnterObserver {
     private final PostService postService;
     private final UserService userService;
-    private final VoteService voteService;
     private final ChannelService channelService;
+
+    private final ChannelServiceFrontend channelServiceFrontend;
 
     private final PostServiceFrontend postServiceFrontend;
 
-    private final Binder<Channel> binder = new Binder<>(Channel.class);
-    private List<PostDto> posts;
     private final Button createPostButton = new Button("Create Post");
     private final Dialog dialog = new Dialog();
     private String channelName;
@@ -64,71 +66,22 @@ public class ChannelView extends Div implements BeforeEnterObserver {
 
     private final CommentFetcher commentFetcher;
 
-    private final Button subscribeButton = new Button("Subscribe");
-    public ChannelView(PostService postService, UserService userService, VoteService voteService, ChannelService channelService, PostServiceFrontend postServiceFrontend, CommentFetcher commentFetcher) {
+    private UserDetailsDto user;
+    private String token;
+    private Long userId;
+    private Long channelId;
+
+
+    public ChannelView(PostService postService, UserService userService, ChannelService channelService, ChannelServiceFrontend channelServiceFrontend, PostServiceFrontend postServiceFrontend, CommentFetcher commentFetcher) {
         this.postService = postService;
         this.userService = userService;
-        this.voteService = voteService;
         this.channelService = channelService;
+        this.channelServiceFrontend = channelServiceFrontend;
         this.postServiceFrontend = postServiceFrontend;
         this.commentFetcher = commentFetcher;
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        dialog.getFooter().add(cancelButton);
-        createPostButton.addClickListener(event -> {
-            UserDetailsDto user = new UserDetailsDto();
-            UserUtils.showStoredValue(user, UI.getCurrent(), () -> {
-                if (user.getAccessToken() == null) {
-                    UI.getCurrent().navigate("register");
-                } else {
-                    try {
-                        DecodedJWT decodedJwt = JWT.decode(user.getAccessToken());
-                        Date expiresAt = decodedJwt.getExpiresAt();
-                        if (expiresAt.before(new Date())) {
-                            UI.getCurrent().navigate("register");
-                        } else {
-                            Channel channel = channelService.findByChannelName(channelName);
-                            dialog.removeAll();
-                            PostForm postForm = new PostForm(userService.findByUserId(user.getUser_id()), postService, channel);
-                            dialog.add(postForm);
-                            dialog.open();
-                            dialog.addDialogCloseActionListener(e -> loadPosts());
-                        }
-                    } catch (JWTDecodeException e) {
-                        UI.getCurrent().navigate("register");
-                    }
-                }
-            });
-        });
-        createPostButton.addClassName("create-channel-button");
-        subscribeButton.addClickListener(e -> {
-            UserDetailsDto user = new UserDetailsDto();
-            UserUtils.showStoredValue(user, UI.getCurrent(), () -> {
-                if (user.getAccessToken() == null) {
-                    UI.getCurrent().navigate("register");
-                } else {
-                    try {
-                        Channel currentChannel = channelService.findByChannelName(channelName);
-                        userService.subscribeToChannel(currentChannel.getId(), user.getUser_id());
-                        System.out.println("subscribed to channel" + " " + currentChannel.getName()
-                        + " " + user.getUser_name());
-                        UI.getCurrent().getPage().reload();
-                    } catch (JWTDecodeException exception) {
-                        UI.getCurrent().navigate("register");
-                    }
-                }
-            });
-        });
-
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-
-        buttonLayout.setSpacing(true);
-
-        buttonLayout.add(createPostButton, subscribeButton);
-
-        add(buttonLayout);
     }
 
-    private ComponentRenderer<Component, PostDto> postsRenderer = new ComponentRenderer<>(
+    private final ComponentRenderer<Component, PostDto> postsRenderer = new ComponentRenderer<>(
             post -> {
                 StreamResource sr = new StreamResource("post", () -> {
                     return new ByteArrayInputStream(post.getContent());
@@ -193,11 +146,12 @@ public class ChannelView extends Div implements BeforeEnterObserver {
         Div commentList = new Div(); // This will contain the rendered comments
         commentList.addClassName("comment-list");
 
-        ComponentRenderer<Component, CommentDto> commentsRenderer = new ComponentRenderer<>(
+        List<CommentDto> comments = post.getComments();
+
+        comments.forEach(
                 comment -> {
                     Div commentContainer = new Div();
                     commentContainer.addClassName("comment-container");
-
                     Div commentUser = new Div(new Text(comment.getUserName()));
                     commentUser.addClassName("comment-user");
 
@@ -214,14 +168,13 @@ public class ChannelView extends Div implements BeforeEnterObserver {
 
                     Div commentDeets = new Div(commentUser, commentTime);
                     commentDeets.addClassName("comment-deets");
-
                     commentContainer.add(commentDeets, commentText);
-                    return commentContainer;
+
+                    commentList.add(commentContainer);
+
                 }
         );
 
-        commentFetcher.fetchComments(post.getId())
-                .forEach(commentDto -> commentList.add(commentsRenderer.createComponent(commentDto)));
 
         // Add a text field for new comments
         TextArea newCommentField = new TextArea();
@@ -261,7 +214,10 @@ public class ChannelView extends Div implements BeforeEnterObserver {
     public void beforeEnter(BeforeEnterEvent event) {
         Optional<String> channelNameParam = event.getRouteParameters().get("channelName");
         channelNameParam.ifPresent(name -> {
+            removeAll();
             channelName = name;
+            addChannelContent();
+            addStatusLabel();
             loadPosts();
         });
 
@@ -270,14 +226,86 @@ public class ChannelView extends Div implements BeforeEnterObserver {
         }
     }
 
+    private void addStatusLabel() {
+        statusLabel.setText("Loading posts...");
+        statusLabel.addClassName("status-label");
+        add(statusLabel);
+    }
+
+    private void addChannelContent() {
+        Div HeaderDiv = new Div();
+        HeaderDiv.addClassName("channel-header");
+        Div headerText = new Div("Welcome to ");
+        Span channelText = new Span(channelName);
+        channelText.addClassName("header-channel-name");
+        headerText.add(channelText);
+        HeaderDiv.add(headerText);
+        add(HeaderDiv);
+        Button subscribeButton = getButton();
+        subscribeButton.addClassName("subscribe-channel-button");
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        dialog.getFooter().add(cancelButton);
+        createPostButton.addClickListener(event -> {
+            UserDetailsDto user = new UserDetailsDto();
+            UserUtils.showStoredValue(user, UI.getCurrent(), () -> {
+                if (user.getAccessToken() == null) {
+                    UI.getCurrent().navigate("register");
+                } else {
+                    try {
+                        DecodedJWT decodedJwt = JWT.decode(user.getAccessToken());
+                        Date expiresAt = decodedJwt.getExpiresAt();
+                        if (expiresAt.before(new Date())) {
+                            UI.getCurrent().navigate("register");
+                        } else {
+                            Channel channel = channelService.findByChannelName(channelName);
+                            dialog.removeAll();
+                            PostForm postForm = new PostForm(userService.findByUserId(user.getUser_id()), postService, channel);
+                            dialog.add(postForm);
+                            dialog.open();
+//                            dialog.addDialogCloseActionListener(e -> loadPosts());
+                        }
+                    } catch (JWTDecodeException e) {
+                        UI.getCurrent().navigate("register");
+                    }
+                }
+            });
+        });
+        Div buttonDiv = new Div(subscribeButton, createPostButton);
+        buttonDiv.addClassName("channel-buttons");
+        createPostButton.addClassName("create-channel-button");
+        add(buttonDiv);
+    }
+
+    @NotNull
+    private Button getButton() {
+        System.out.println("Is Subscribed to Channel: " + isSubscribedToChannel());
+        if (isSubscribedToChannel()) {
+            Button unsubscribeButton = new Button("Subscribed");
+            unsubscribeButton.addClassName("unsubscribe-channel-button");
+            return unsubscribeButton;
+        }
+        Button subscribeButton = new Button("Subscribe");
+        subscribeButton.addClickListener(e -> {
+            channelServiceFrontend.subscribeToChannel(channelId, token, userId);
+            UI.getCurrent().getPage().reload();
+        });
+        return subscribeButton;
+    }
+
+    // Create Method to call channelServiceFrontend to check if user is subscribed to channel
+    private boolean isSubscribedToChannel() {
+        return Boolean.FALSE; // Replace with your code to check if user is subscribed to channel
+    }
+
     private void loadPosts() {
         if (postList != null) {
             remove(postList);
+            postList.setItems(List.of());
         }
 
         statusLabel.setVisible(true);
 
-        UserDetailsDto user = new UserDetailsDto();
+        user = new UserDetailsDto();
         UserUtils.showStoredValue(user, UI.getCurrent(), () -> {
             if (user.getAccessToken() == null) {
                 statusLabel.setText("Please log in.");
@@ -289,6 +317,9 @@ public class ChannelView extends Div implements BeforeEnterObserver {
                 return;
             }
 
+            token = user.getAccessToken();
+            userId = user.getUser_id();
+            channelId = channelService.findByChannelName(channelName).getId();
 
             postServiceFrontend.getChannelPosts(posts -> {
                 System.out.println("Got all posts in PostList");
@@ -297,7 +328,6 @@ public class ChannelView extends Div implements BeforeEnterObserver {
 
                     System.out.println("Rendered all posts in PostList");
 
-                    this.posts = posts;
                     postList = new VirtualList<>();
                     postList.setItems(posts);
                     postList.setRenderer(postsRenderer);
@@ -308,5 +338,6 @@ public class ChannelView extends Div implements BeforeEnterObserver {
             },user.getAccessToken(), channelName);
 
         });
+
     }
 }

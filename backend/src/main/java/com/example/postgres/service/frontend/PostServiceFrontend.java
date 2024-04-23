@@ -1,6 +1,6 @@
 package com.example.postgres.service.frontend;
 
-import com.example.postgres.classes.PostDto;
+import com.example.postgres.dto.PostDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;

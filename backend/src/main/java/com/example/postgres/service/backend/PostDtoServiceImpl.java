@@ -1,7 +1,7 @@
 package com.example.postgres.service.backend;
 
 import com.example.postgres.classes.Post;
-import com.example.postgres.classes.PostDto;
+import com.example.postgres.dto.PostDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
