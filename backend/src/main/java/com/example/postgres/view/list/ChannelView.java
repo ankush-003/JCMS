@@ -102,12 +102,23 @@ public class ChannelView extends Div implements BeforeEnterObserver {
                 Div contact = new Div(user, channel);
                 contact.addClassName("post-contact");
 
+                Date myDate = Date.from(post.getCreated_at());
+
+                SimpleDateFormat formatter = new SimpleDateFormat("HH:mm | MMM d, yyyy");
+                String formattedDate = formatter.format(myDate);
+
+                Div dateDiv = new Div(formattedDate);
+                dateDiv.addClassName("post-date");
+
                 Div info = getInfo(post);
 
                 card.add(image, info);
                 card.addClassName("post-card");
 
-                Div outer = new Div(card, contact);
+                Div leftElement = new Div(dateDiv,contact );
+                leftElement.addClassName("post-right-element");
+
+                Div outer = new Div(card, leftElement);
 
                 Div actual_outer = new Div(outer, getCommentElement(post));
                 actual_outer.addClassName("post-full");
@@ -160,7 +171,7 @@ public class ChannelView extends Div implements BeforeEnterObserver {
 
                     Date myDate = Date.from(comment.getDateTime());
 
-                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm, MMM d, yyyy");
+                    SimpleDateFormat formatter = new SimpleDateFormat("HH:mm | MMM d, yyyy");
                     String formattedDate = formatter.format(myDate);
 
                     Div commentTime =  new Div(formattedDate);

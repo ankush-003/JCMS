@@ -171,6 +171,18 @@ vaadin-button {
     border-radius: 4px;
 }
 
+.post-date {
+    display: flex;
+    gap: 0.2rem;
+    font-size: small;
+    justify-content: flex-end;
+    background: var(--primary);
+    width: fit-content;
+    padding: 0.5rem;
+    align-self: self-end;
+    border-radius: 4px;
+}
+
 .post-title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -259,6 +271,13 @@ vaadin-drawer-toggle {
 .no-results {
     padding: 1rem 2rem 0;
     font-size: x-large;
+}
+
+.post-right-element {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
 }
 
 .channel-list-drawer {
@@ -368,3 +387,4 @@ vaadin-drawer-toggle {
 .post-list:nth-child(1) {
     display: none;
 }
+
