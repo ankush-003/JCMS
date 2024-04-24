@@ -27,7 +27,7 @@ public class PostController {
         this.postDtoService = postDtoService;
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_WRITE')")
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
     @PostMapping("")
     public Post savePost(@RequestBody Post post) {
         return postService.savePost(post);
@@ -61,6 +61,7 @@ public class PostController {
         return postService.findByPostId(id);
     }
 
+    @PreAuthorize("hasAuthority('SCOPE_READ')")
     @PostMapping(
             value="/{post-id}/upload",
             produces = MediaType.IMAGE_PNG_VALUE
