@@ -220,9 +220,18 @@ public class MainLayout extends AppLayout {
     }
 
     private void LoginCheck(String token) {
-        Boolean check  = frontendUserService.isUserLoggedIn(token);
-        System.out.println("Check: " + check);
-        createDrawer(check,token);
-        createHeader(check,token);
+        if(token == null) {
+            createDrawer(false, "");
+            createHeader(false, "");
+            return;
+        }
+        else
+        {
+            Boolean check  = frontendUserService.isUserLoggedIn(token);
+            System.out.println("Check: " + check);
+            createDrawer(check,token);
+            createHeader(check,token);
+        }
+
     }
 }
