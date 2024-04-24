@@ -29,13 +29,13 @@ public class SearchService {
         System.out.println("Recieved Token: " + query);
         if (query == null) {
             request = new Request.Builder()
-                    .url("http://localhost:8080/api/channels/search")
-                    .addHeader("Authorization", "Bearer " + token)
+                    .url("http://localhost:8080/channels/search")
+//                    .addHeader("Authorization", "Bearer " + token)
                     .build();
         } else {
         request = new Request.Builder()
-                .url("http://localhost:8080/api/channels/search/" + query)
-                .addHeader("Authorization", "Bearer " + token)
+                .url("http://localhost:8080/channels/search/" + query)
+//                .addHeader("Authorization", "Bearer " + token)
                 .build();
         }
 
