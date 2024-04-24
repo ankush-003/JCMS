@@ -35,9 +35,9 @@ public class JwtTokenGenerator {
         String permissions = getPermissionsFromRoles(roles);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("arya")
+                .issuer("Admin")
                 .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plus(30 , ChronoUnit.MINUTES))//30 minutes time has been set for the access token
+                .expiresAt(Instant.now().plus(60 , ChronoUnit.MINUTES))//60 minutes time has been set for the access token
                 .subject(authentication.getName())
                 .claim("scope", permissions)
                 .build();
@@ -50,7 +50,7 @@ public class JwtTokenGenerator {
         log.info("[JwtTokenGenerator:generateRefreshToken] Token Creation Started for:{}", authentication.getName());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("arya")
+                .issuer("Admin")
                 .issuedAt(Instant.now())
                 .expiresAt(Instant.now().plus(15 , ChronoUnit.DAYS))
                 .subject(authentication.getName())

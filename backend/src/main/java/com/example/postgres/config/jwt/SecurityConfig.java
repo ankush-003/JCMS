@@ -1,7 +1,6 @@
-package com.example.postgres.config;
+package com.example.postgres.config.jwt;
 
-import com.example.postgres.config.jwt.JwtAccessTokenFilter;
-import com.example.postgres.config.jwt.JwtRefreshTokenFilter;
+import com.example.postgres.config.RSAKeyRecord;
 import com.example.postgres.repository.RefreshTokenRepository;
 import com.example.postgres.service.frontend.LogoutHandlerService;
 import com.nimbusds.jose.jwk.JWK;
@@ -33,7 +32,6 @@ import org.springframework.security.oauth2.server.resource.web.access.BearerToke
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import com.example.postgres.config.jwt.JwtTokenUtils;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 import com.example.postgres.config.user.UserInfoManagerConfig;
@@ -42,6 +40,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -56,7 +55,6 @@ public class SecurityConfig {
     private final JwtTokenUtils jwtTokenUtils;
     private final RefreshTokenRepository refreshTokenRepo;
     private final LogoutHandlerService logoutHandlerService;
-
     @Order(1)
     @Bean
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -68,7 +66,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                     .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord,jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
                     .exceptionHandling((ex) -> ex
                             .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                             .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
@@ -94,10 +92,8 @@ public class SecurityConfig {
                     .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                     .userDetailsService(userInfoManagerConfig)
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .exceptionHandling(ex -> {
-                        ex.authenticationEntryPoint((request, response, authException) ->
-                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage()));
-                    })
+                    .exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) ->
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage())))
                     .httpBasic(withDefaults())
                     .formLogin(withDefaults())
                     .build();
@@ -142,7 +138,7 @@ public class SecurityConfig {
                     .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                     .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord, jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
+                    .addFilterBefore(new JwtAccessTokenFilter(rsaKeyRecord,jwtTokenUtils), UsernamePasswordAuthenticationFilter.class)
                     .logout(logout -> logout
                             .logoutUrl("/logout")
                             .addLogoutHandler(logoutHandlerService)
@@ -203,7 +199,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Change this to the appropriate client origin
+        configuration.setAllowedOrigins(List.of("http://localhost:8080")); // Change this to the appropriate client origin
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
