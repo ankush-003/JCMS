@@ -75,6 +75,8 @@ public class ChannelView extends Div implements BeforeEnterObserver {
 
     private Button subscribeButton;
 
+    private Div buttonDiv;
+
 
     public ChannelView(PostService postService, UserService userService, ChannelService channelService, ChannelServiceFrontend channelServiceFrontend, PostServiceFrontend postServiceFrontend, CommentFetcher commentFetcher) {
         this.postService = postService;
@@ -285,7 +287,7 @@ public class ChannelView extends Div implements BeforeEnterObserver {
                 }
             });
         });
-        Div buttonDiv = new Div(subscribeButton, createPostButton);
+        buttonDiv = new Div(subscribeButton, createPostButton);
         buttonDiv.addClassName("channel-buttons");
         createPostButton.addClassName("create-channel-button");
         add(buttonDiv);
@@ -332,6 +334,7 @@ public class ChannelView extends Div implements BeforeEnterObserver {
                 Notification notification = Notification
                         .show("Please log in.", 3000, Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+                remove(buttonDiv);
                 return;
             }
 

@@ -189,7 +189,6 @@ public class MainLayout extends AppLayout {
             profileLayout.setVisible(false);
             allPostsLayout.setVisible(false);
             channelDiv.setVisible(false);
-            allChannelsDiv.setVisible(false);
         }
 
         drawer = new VerticalLayout(

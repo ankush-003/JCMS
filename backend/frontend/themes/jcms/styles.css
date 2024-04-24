@@ -398,3 +398,6 @@ vaadin-drawer-toggle {
     display: none;
 }
 
+.channel-list-drawer {
+    overflow: hidden;
+}
