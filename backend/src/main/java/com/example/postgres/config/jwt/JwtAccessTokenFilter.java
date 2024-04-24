@@ -1,6 +1,5 @@
 package com.example.postgres.config.jwt;
 
-import com.example.postgres.dto.TokenType;
 import com.example.postgres.config.RSAKeyRecord;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,23 +7,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidationException;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
-import com.example.postgres.config.jwt.JwtTokenUtils;
 
 import java.io.IOException;
-
 
 @RequiredArgsConstructor
 @Slf4j
@@ -34,53 +23,33 @@ public class JwtAccessTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response,@NotNull FilterChain filterChain) throws ServletException, IOException {
         try {
             log.info("[JwtAccessTokenFilter:doFilterInternal] :: Started ");
-            log.info("[JwtAccessTokenFilter:doFilterInternal]Filtering the Http Request:{}", request.getRequestURI());
+            log.info("[JwtAccessTokenFilter:doFilterInternal] Filtering the Http Request:{}", request.getRequestURI());
+            CustomFilter decodeFilter = new DecodeFilter(jwtTokenUtils, rsaKeyRecord);
+            CustomFilter validHeaderCheckFilter = new ValidHeaderCheckFilter();
+            CustomFilter validUserCheckFilter = new ValidUserCheckFilter(jwtTokenUtils);
 
-            final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            validHeaderCheckFilter.handle(request, response, filterChain);
 
-            if (authHeader == null || authHeader.isEmpty()) {
-                // No Authorization header present, handle accordingly
-                log.warn("[JwtAccessTokenFilter:doFilterInternal] No Authorization header found");
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
+            // Check if the request is already complete (e.g., if an error response was sent)
+            if (response.isCommitted()) {
                 return;
             }
 
-            JwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(rsaKeyRecord.rsaPublicKey()).build();
+            decodeFilter.handle(request, response, filterChain);
 
-            // Check if the token is of type Bearer (basically bearer should be present in the header)
-            if (!authHeader.startsWith(TokenType.Bearer.name())) {
-                filterChain.doFilter(request, response);
+            // Check if the request is already complete
+            if (response.isCommitted()) {
                 return;
             }
 
-            // Extract the token from the header
-            final String token = authHeader.substring(7);
-            final Jwt jwtToken = jwtDecoder.decode(token);
+            validUserCheckFilter.handle(request, response, filterChain);
 
-            final String userName = jwtTokenUtils.getUserName(jwtToken);
-
-            if (!userName.isEmpty() && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = jwtTokenUtils.userDetails(userName);
-                if (jwtTokenUtils.isTokenValid(jwtToken, userDetails)) {
-                    SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-
-                    UsernamePasswordAuthenticationToken createdToken = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    createdToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    securityContext.setAuthentication(createdToken);
-                    SecurityContextHolder.setContext(securityContext);
-                }
-            }
             log.info("[JwtAccessTokenFilter:doFilterInternal] Completed");
 
-            filterChain.doFilter(request, response);
-        }catch (JwtValidationException jwtValidationException) {
+        } catch (JwtValidationException jwtValidationException) {
             log.error("[JwtAccessTokenFilter:doFilterInternal] Exception due to :{}", jwtValidationException.getMessage());
 
             // Check if the exception is due to token expiration

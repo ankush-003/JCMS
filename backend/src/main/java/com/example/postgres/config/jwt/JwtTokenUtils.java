@@ -60,7 +60,7 @@ public class JwtTokenUtils {
 
         User user = userInfoRepo.findByEmail(jwtToken.getSubject()).orElseThrow(() -> new UsernameNotFoundException("UserEmail: " + jwtToken.getSubject() + " does not exist"));
 
-//         Get all subscribed channels of the user but only the names by iterating and sttore in List<String>
+//         Get all subscribed channels of the user but only the names by iterating and store in List<String>
         List<String> subscribedChannels = user.getSubscribedChannels().stream().map(Channel::getName).toList();
 
 
