@@ -220,6 +220,7 @@ public class PostList extends Main {
                     System.out.println("Rendered all posts in PostList");
 
 
+
                     postList = new VirtualList<>();
                     postList.setItems(posts);
                     postList.setRenderer(postsRenderer);

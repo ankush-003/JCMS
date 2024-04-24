@@ -401,3 +401,8 @@ vaadin-drawer-toggle {
 .channel-list-drawer {
     overflow: hidden;
 }
+
+.no-posts {
+    padding: 1rem 2rem 0;
+    font-size: x-large;
+}

@@ -356,7 +356,11 @@ public class ChannelView extends Div implements BeforeEnterObserver {
                 System.out.println("Got all posts in PostList");
                 getUI().ifPresent(ui -> ui.access(() -> {
                     statusLabel.setVisible(false);
-
+                    if (posts.isEmpty()) {
+                        Div noPosts = new Div("No posts available. Add one!");
+                        noPosts.addClassName("no-posts");
+                        add(noPosts);
+                    }
                     System.out.println("Rendered all posts in PostList");
 
                     postList = new VirtualList<>();
